@@ -1,10 +1,29 @@
 #![allow(non_snake_case)]
 use dioxus::prelude::*;
 
+use crate::data::all_stages;
+use crate::state::use_progress;
 use crate::Route;
 
 #[component]
 pub fn Home() -> Element {
+    let progress = use_progress();
+    let stages   = all_stages();
+
+    let (stage_id, lesson_id, stage_name, lesson_pct) = {
+        let p   = progress.read();
+        let sid = p.current_stage;
+        let lid = p.current_lesson;
+
+        let meta  = stages.iter().find(|s| s.id == sid);
+        let total = meta.map(|s| s.total).unwrap_or(8);
+        let name  = meta.map(|s| s.name).unwrap_or("Foundations");
+        let done  = p.completed_in_stage(sid);
+        let pct   = if total > 0 { (done as f32 / total as f32 * 100.0) as u32 } else { 0 };
+
+        (sid, lid, name, pct)
+    };
+
     rsx! {
         div { class: "screen",
             header { class: "home-header",
@@ -14,16 +33,16 @@ pub fn Home() -> Element {
             }
 
             div { class: "home-cards",
-                // Primary action — Continue Learning
+                // Primary action — Continue Learning (navigates to the actual current lesson)
                 div { class: "card card--primary",
                     p { class: "card__eyebrow", "Your Progress" }
                     h2 { class: "card__title", "Continue Learning" }
-                    p { class: "card__meta", "Foundations · Lesson 3 of 8" }
+                    p { class: "card__meta", "{stage_name} · Lesson {lesson_id}" }
                     div { class: "progress-bar",
-                        div { class: "progress-bar__fill", style: "width: 37%" }
+                        div { class: "progress-bar__fill", style: "width: {lesson_pct}%" }
                     }
                     Link {
-                        to: Route::Learn {},
+                        to: Route::LessonView { stage_id, lesson_id },
                         class: "btn btn--on-primary",
                         "Continue Learning"
                     }
