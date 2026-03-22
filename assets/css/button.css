@@ -1,0 +1,36 @@
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 600;
+    height: 52px;
+    width: 100%;
+    transition: opacity 0.15s ease, transform 0.1s ease;
+    cursor: pointer;
+}
+
+.btn:active { transform: scale(0.98); }
+
+.btn--on-primary { background: #FFFFFF; color: var(--color-primary); border: none; }
+
+.btn--outline {
+    background: transparent;
+    border: 2px solid var(--color-primary);
+    color: var(--color-primary);
+}
+
+.btn--ghost {
+    background: transparent;
+    border: 2px solid var(--color-culture-text);
+    color: var(--color-culture-text);
+}
+
+.btn--sm {
+    padding: 0 14px;
+    font-size: 13px;
+    height: 36px;
+    width: auto;
+}

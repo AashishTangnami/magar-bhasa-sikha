@@ -40,8 +40,23 @@ pub enum Route {
 
 // ─── Assets ────────────────────────────────────────────────────────────────
 
-const FAVICON:  Asset = asset!("/assets/favicon.ico");
-const MAIN_CSS: Asset = asset!("/assets/main.css");
+const FAVICON:     Asset = asset!("/assets/favicon.ico");
+
+// CSS — each file registered individually so the asset pipeline picks them all up
+const CSS_TOKENS:     Asset = asset!("/assets/css/tokens.css");
+const CSS_BASE:       Asset = asset!("/assets/css/base.css");
+const CSS_BUTTON:     Asset = asset!("/assets/css/button.css");
+const CSS_CARD:       Asset = asset!("/assets/css/card.css");
+const CSS_SCREEN:     Asset = asset!("/assets/css/screen.css");
+const CSS_LAYOUT:     Asset = asset!("/assets/css/layout.css");
+const CSS_SIDEBAR:    Asset = asset!("/assets/css/sidebar.css");
+const CSS_BOTTOM_NAV: Asset = asset!("/assets/css/bottom-nav.css");
+const CSS_HOME:       Asset = asset!("/assets/css/home.css");
+const CSS_LEARN:      Asset = asset!("/assets/css/learn.css");
+const CSS_PRACTICE:   Asset = asset!("/assets/css/practice.css");
+const CSS_CULTURE:    Asset = asset!("/assets/css/culture.css");
+const CSS_PROFILE:    Asset = asset!("/assets/css/profile.css");
+const CSS_LESSON:     Asset = asset!("/assets/css/lesson.css");
 
 // ─── Entry point ───────────────────────────────────────────────────────────
 
@@ -54,8 +69,24 @@ fn App() -> Element {
     provide_progress();
 
     rsx! {
-        document::Link { rel: "icon",       href: FAVICON  }
-        document::Link { rel: "stylesheet", href: MAIN_CSS }
+        document::Link { rel: "icon", href: FAVICON }
+
+        // tokens + base first, then primitives, then shell, then screens
+        document::Link { rel: "stylesheet", href: CSS_TOKENS }
+        document::Link { rel: "stylesheet", href: CSS_BASE }
+        document::Link { rel: "stylesheet", href: CSS_BUTTON }
+        document::Link { rel: "stylesheet", href: CSS_CARD }
+        document::Link { rel: "stylesheet", href: CSS_SCREEN }
+        document::Link { rel: "stylesheet", href: CSS_LAYOUT }
+        document::Link { rel: "stylesheet", href: CSS_SIDEBAR }
+        document::Link { rel: "stylesheet", href: CSS_BOTTOM_NAV }
+        document::Link { rel: "stylesheet", href: CSS_HOME }
+        document::Link { rel: "stylesheet", href: CSS_LEARN }
+        document::Link { rel: "stylesheet", href: CSS_PRACTICE }
+        document::Link { rel: "stylesheet", href: CSS_CULTURE }
+        document::Link { rel: "stylesheet", href: CSS_PROFILE }
+        document::Link { rel: "stylesheet", href: CSS_LESSON }
+
         Router::<Route> {}
     }
 }

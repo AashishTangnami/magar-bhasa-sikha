@@ -1,0 +1,58 @@
+.card {
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    padding: 20px;
+    border: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+}
+
+.card .btn {
+    margin-top: auto;
+}
+
+.card--primary {
+    background: var(--color-primary);
+    color: #FFFFFF;
+    border-color: transparent;
+}
+
+.card--culture {
+    background: var(--color-culture-bg);
+    border-color: var(--color-culture-border);
+}
+
+.card__eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.65;
+    margin-bottom: 8px;
+}
+
+.card__eyebrow--culture { color: var(--color-culture-text); opacity: 1; }
+
+.card__title { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+.card__meta  { font-size: 13px; opacity: 0.7; margin-bottom: 16px; }
+
+.card__desc {
+    font-size: 14px;
+    line-height: 1.55;
+    margin-bottom: 16px;
+    color: var(--color-text-muted);
+}
+
+.progress-bar {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.progress-bar__fill {
+    height: 100%;
+    background: #FFFFFF;
+    border-radius: 3px;
+}
