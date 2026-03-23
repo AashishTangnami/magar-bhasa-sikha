@@ -26,47 +26,50 @@ pub fn Home() -> Element {
 
     rsx! {
         div { class: "screen",
-            header { class: "home-header",
-                p { class: "home-header__greeting", "Jhorle" }
-                h1 { class: "home-header__title", "Magar Bhasa Sikha" }
-                p { class: "home-header__tagline", "Learn Magar Dhut in Akkha script" }
+            // ── Header ──────────────────────────────────────────────────
+            header { class: "mb-8",
+                p { class: "text-sm text-gray-500 mb-1", "Jhorle" }
+                h1 { class: "text-3xl font-bold text-gray-900 mb-1", "Magar Bhasa Sikha" }
+                p { class: "text-sm text-gray-500", "Learn Magar Dhut in Akkha script" }
             }
 
-            div { class: "home-cards",
-                // Primary action — Continue Learning (navigates to the actual current lesson)
-                div { class: "card card--primary",
-                    p { class: "card__eyebrow", "Your Progress" }
-                    h2 { class: "card__title", "Continue Learning" }
-                    p { class: "card__meta", "{stage_name} · Lesson {lesson_id}" }
-                    div { class: "progress-bar",
-                        div { class: "progress-bar__fill", style: "width: {lesson_pct}%" }
+            // ── Cards ────────────────────────────────────────────────────
+            div { class: "flex flex-col gap-4",
+
+                // Primary — Continue Learning
+                div { class: "bg-primary rounded-2xl p-5 flex flex-col gap-3",
+                    p { class: "text-xs font-medium uppercase tracking-wide text-white/70", "Your Progress" }
+                    h2 { class: "text-xl font-bold text-white", "Continue Learning" }
+                    p { class: "text-sm text-white/80", "{stage_name} · Lesson {lesson_id}" }
+                    div { class: "h-1.5 rounded-full bg-white/30",
+                        div { class: "h-full rounded-full bg-white", style: "width: {lesson_pct}%" }
                     }
                     Link {
                         to: Route::LessonView { stage_id, lesson_id },
-                        class: "btn btn--on-primary",
+                        class: "btn btn--on-primary self-start",
                         "Continue Learning"
                     }
                 }
 
                 // Practice Akkha Script
-                div { class: "card",
-                    h2 { class: "card__title", "Practice Akkha Script" }
-                    p { class: "card__meta", "Letter recognition · 5 letters today" }
+                div { class: "bg-white rounded-2xl p-5 flex flex-col gap-3 border border-gray-100",
+                    h2 { class: "text-lg font-semibold text-gray-900", "Practice Akkha Script" }
+                    p { class: "text-sm text-gray-500", "Letter recognition · 5 letters today" }
                     Link {
                         to: Route::Practice {},
-                        class: "btn btn--outline",
+                        class: "btn btn--outline self-start",
                         "Start Practice"
                     }
                 }
 
                 // Culture Highlight
-                div { class: "card card--culture",
-                    p { class: "card__eyebrow card__eyebrow--culture", "Culture Highlight" }
-                    h2 { class: "card__title", "Maghe Sankranti" }
-                    p { class: "card__desc", "The harvest celebration of the Magar people." }
+                div { class: "bg-culture rounded-2xl p-5 flex flex-col gap-3",
+                    p { class: "text-xs font-medium uppercase tracking-wide text-culture-text", "Culture Highlight" }
+                    h2 { class: "text-lg font-semibold text-gray-900", "Maghe Sankranti" }
+                    p { class: "text-sm text-gray-600", "The harvest celebration of the Magar people." }
                     Link {
                         to: Route::Culture {},
-                        class: "btn btn--ghost",
+                        class: "btn btn--ghost self-start text-culture-text",
                         "Explore Culture"
                     }
                 }

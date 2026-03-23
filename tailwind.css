@@ -1,1 +1,71 @@
 @import "tailwindcss";
+
+/* Tell Tailwind to scan Rust source files for class names */
+@source "./src/**/*.rs";
+
+/* ─── Design tokens ────────────────────────────────────────────────────── */
+@theme {
+  --color-primary:      #B5451B;
+  --color-primary-dark: #8E3415;
+  --color-secondary:    #2D6A4F;
+  --color-bg:           #F5F0E8;
+  --color-culture:      #FEF7E7;
+  --color-culture-text: #7A5C00;
+}
+
+/* ─── Base reset ───────────────────────────────────────────────────────── */
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+  a { text-decoration: none; color: inherit; }
+  button { font-family: inherit; }
+}
+
+/* ─── Reusable component classes ───────────────────────────────────────── */
+/*
+   Only patterns used in 3+ places get a component class.
+   Everything else uses utility classes directly in Rust.
+*/
+@layer components {
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center h-11 px-5 rounded-xl
+           text-sm font-semibold cursor-pointer border-0
+           transition-transform active:scale-[0.98] no-underline;
+  }
+  .btn--on-primary { @apply bg-white text-primary; }
+  .btn--outline    { @apply border-2 border-primary text-primary bg-transparent; }
+  .btn--ghost      { @apply bg-transparent underline decoration-1; }
+  .btn--sm         { @apply h-9 px-4 text-xs rounded-lg; }
+
+  /* Page wrapper used in every screen component */
+  .screen {
+    @apply px-4 py-6 sm:px-8 sm:py-8 max-w-3xl mx-auto w-full;
+  }
+
+  /* Bottom nav items */
+  .nav-item {
+    @apply flex-1 flex flex-col items-center justify-center gap-1
+           text-gray-500 no-underline;
+  }
+  .nav-item--active { @apply text-primary; }
+
+  /* Sidebar nav items */
+  .sidebar-item {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-xl
+           text-sm text-gray-600 no-underline min-h-[48px]
+           hover:bg-gray-50 transition-colors;
+  }
+  .sidebar-item--active {
+    @apply text-primary bg-primary/10 font-medium hover:bg-primary/10;
+  }
+
+  /* Lesson footer action row */
+  .lesson-footer {
+    @apply mt-8 pt-4 border-t border-gray-100 flex justify-end;
+  }
+  .lesson-footer__complete-btn {
+    @apply bg-primary text-white;
+  }
+}

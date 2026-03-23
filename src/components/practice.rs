@@ -5,11 +5,11 @@ use dioxus::prelude::*;
 pub fn Practice() -> Element {
     rsx! {
         div { class: "screen",
-            header { class: "screen-header",
-                h1 { class: "screen-header__title", "Practice Akkha Script" }
-                p { class: "screen-header__subtitle", "Build your script skills daily" }
+            header { class: "mb-6",
+                h1 { class: "text-2xl font-bold text-gray-900", "Practice Akkha Script" }
+                p { class: "text-sm text-gray-500 mt-1", "Build your script skills daily" }
             }
-            div { class: "practice-list",
+            div { class: "flex flex-col gap-3",
                 PracticeItem { icon: "◎", name: "Letter Recognition", desc: "Identify Akkha letters by sound" }
                 PracticeItem { icon: "♫", name: "Sound Matching",     desc: "Match sounds to written letters" }
                 PracticeItem { icon: "✎", name: "Tracing",            desc: "Trace letter shapes" }
@@ -21,15 +21,16 @@ pub fn Practice() -> Element {
 }
 
 #[component]
-pub fn PracticeItem(icon: String, name: String, desc: String) -> Element {
+fn PracticeItem(icon: String, name: String, desc: String) -> Element {
     rsx! {
-        button { class: "practice-item",
-            span { class: "practice-item__icon", "{icon}" }
-            div { class: "practice-item__body",
-                h3 { class: "practice-item__name", "{name}" }
-                p { class: "practice-item__desc", "{desc}" }
+        button {
+            class: "flex items-center gap-4 p-4 rounded-2xl bg-white border border-gray-100 w-full text-left cursor-pointer hover:bg-gray-50 transition-colors",
+            span { class: "text-2xl w-10 text-center shrink-0", "{icon}" }
+            div { class: "flex-1 min-w-0",
+                h3 { class: "text-base font-semibold text-gray-900", "{name}" }
+                p { class: "text-sm text-gray-500", "{desc}" }
             }
-            span { class: "practice-item__arrow", "›" }
+            span { class: "text-gray-400 text-lg shrink-0", "›" }
         }
     }
 }
