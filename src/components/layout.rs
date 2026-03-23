@@ -8,10 +8,10 @@ use crate::Route;
 #[component]
 pub fn AppLayout() -> Element {
     rsx! {
-        div { class: "app",
+        div { class: "flex min-h-screen bg-bg",
             Sidebar {}
-            div { class: "app-main",
-                div { class: "app__content",
+            div { class: "flex-1 flex flex-col min-w-0",
+                div { class: "flex-1 overflow-y-auto pb-16 sm:pb-0",
                     Outlet::<Route> {}
                 }
                 BottomNav {}
@@ -33,41 +33,45 @@ pub fn Sidebar() -> Element {
     let profile_active  = matches!(&route, Route::Profile {});
 
     rsx! {
-        aside { class: "sidebar", aria_label: "Main navigation",
-            div { class: "sidebar__brand",
-                span { class: "sidebar__brand-dot" }
-                span { class: "sidebar__brand-name", "Magar Bhasa Sikha" }
+        aside {
+            class: "hidden sm:flex flex-col w-60 shrink-0 border-r border-gray-100 bg-white min-h-screen",
+            aria_label: "Main navigation",
+
+            div { class: "flex items-center gap-2 px-4 py-5 border-b border-gray-100",
+                span { class: "w-2 h-2 rounded-full bg-primary shrink-0" }
+                span { class: "font-semibold text-sm text-gray-800", "Magar Bhasa Sikha" }
             }
-            nav { class: "sidebar__nav",
+
+            nav { class: "flex flex-col gap-1 p-3",
                 Link {
                     to: Route::Home {},
                     class: if home_active { "sidebar-item sidebar-item--active" } else { "sidebar-item" },
-                    span { class: "sidebar-item__icon", "⌂" }
-                    span { class: "sidebar-item__label", "Home" }
+                    span { class: "text-lg w-5 text-center", "⌂" }
+                    span { "Home" }
                 }
                 Link {
                     to: Route::Learn {},
                     class: if learn_active { "sidebar-item sidebar-item--active" } else { "sidebar-item" },
-                    span { class: "sidebar-item__icon", "◎" }
-                    span { class: "sidebar-item__label", "Learn" }
+                    span { class: "text-lg w-5 text-center", "◎" }
+                    span { "Learn" }
                 }
                 Link {
                     to: Route::Practice {},
                     class: if practice_active { "sidebar-item sidebar-item--active" } else { "sidebar-item" },
-                    span { class: "sidebar-item__icon", "✎" }
-                    span { class: "sidebar-item__label", "Practice" }
+                    span { class: "text-lg w-5 text-center", "✎" }
+                    span { "Practice" }
                 }
                 Link {
                     to: Route::Culture {},
                     class: if culture_active { "sidebar-item sidebar-item--active" } else { "sidebar-item" },
-                    span { class: "sidebar-item__icon", "❋" }
-                    span { class: "sidebar-item__label", "Culture" }
+                    span { class: "text-lg w-5 text-center", "❋" }
+                    span { "Culture" }
                 }
                 Link {
                     to: Route::Profile {},
                     class: if profile_active { "sidebar-item sidebar-item--active" } else { "sidebar-item" },
-                    span { class: "sidebar-item__icon", "◉" }
-                    span { class: "sidebar-item__label", "Profile" }
+                    span { class: "text-lg w-5 text-center", "◉" }
+                    span { "Profile" }
                 }
             }
         }
@@ -88,39 +92,39 @@ pub fn BottomNav() -> Element {
 
     rsx! {
         nav {
-            class: "bottom-nav",
+            class: "sm:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 flex h-16 z-50",
             role: "navigation",
             aria_label: "Main navigation",
 
             Link {
                 to: Route::Home {},
                 class: if home_active { "nav-item nav-item--active" } else { "nav-item" },
-                span { class: "nav-item__icon", "⌂" }
-                span { class: "nav-item__label", "Home" }
+                span { class: "text-xl", "⌂" }
+                span { class: "text-[11px]", "Home" }
             }
             Link {
                 to: Route::Learn {},
                 class: if learn_active { "nav-item nav-item--active" } else { "nav-item" },
-                span { class: "nav-item__icon", "◎" }
-                span { class: "nav-item__label", "Learn" }
+                span { class: "text-xl", "◎" }
+                span { class: "text-[11px]", "Learn" }
             }
             Link {
                 to: Route::Practice {},
                 class: if practice_active { "nav-item nav-item--active" } else { "nav-item" },
-                span { class: "nav-item__icon", "✎" }
-                span { class: "nav-item__label", "Practice" }
+                span { class: "text-xl", "✎" }
+                span { class: "text-[11px]", "Practice" }
             }
             Link {
                 to: Route::Culture {},
                 class: if culture_active { "nav-item nav-item--active" } else { "nav-item" },
-                span { class: "nav-item__icon", "❋" }
-                span { class: "nav-item__label", "Culture" }
+                span { class: "text-xl", "❋" }
+                span { class: "text-[11px]", "Culture" }
             }
             Link {
                 to: Route::Profile {},
                 class: if profile_active { "nav-item nav-item--active" } else { "nav-item" },
-                span { class: "nav-item__icon", "◉" }
-                span { class: "nav-item__label", "Profile" }
+                span { class: "text-xl", "◉" }
+                span { class: "text-[11px]", "Profile" }
             }
         }
     }

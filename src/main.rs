@@ -2,13 +2,19 @@
 use dioxus::prelude::*;
 
 mod components;
+mod data;
+mod state;
 
 use components::culture::Culture;
 use components::home::Home;
 use components::layout::AppLayout;
 use components::learn::Learn;
+use components::lesson::LessonView;
 use components::practice::Practice;
 use components::profile::Profile;
+use components::stage_lessons::StageLessons;
+
+use state::provide_progress;
 
 // ─── Routes ────────────────────────────────────────────────────────────────
 
@@ -20,6 +26,10 @@ pub enum Route {
         Home {},
         #[route("/learn")]
         Learn {},
+        #[route("/learn/stage/:stage_id")]
+        StageLessons { stage_id: usize },
+        #[route("/learn/stage/:stage_id/lesson/:lesson_id")]
+        LessonView { stage_id: usize, lesson_id: usize },
         #[route("/practice")]
         Practice {},
         #[route("/culture")]
@@ -31,7 +41,7 @@ pub enum Route {
 // ─── Assets ────────────────────────────────────────────────────────────────
 
 const FAVICON: Asset = asset!("/assets/favicon.ico");
-const MAIN_CSS: Asset = asset!("/assets/main.css");
+const CSS:     Asset = asset!("/assets/tailwind.css");
 
 // ─── Entry point ───────────────────────────────────────────────────────────
 
@@ -41,9 +51,12 @@ fn main() {
 
 #[component]
 fn App() -> Element {
+    provide_progress();
+
     rsx! {
         document::Link { rel: "icon", href: FAVICON }
-        document::Link { rel: "stylesheet", href: MAIN_CSS }
+        document::Link { rel: "stylesheet", href: CSS }
+
         Router::<Route> {}
     }
 }

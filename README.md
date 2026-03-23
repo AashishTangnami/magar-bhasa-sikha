@@ -5,7 +5,7 @@ A web app for learning the Magar language, built with [Dioxus](https://dioxuslab
 ## Features
 
 - **Home** — Landing page and introduction
-- **Learn** — Structured Magar language lessons
+- **Learn** — Staged learning path (Foundations → Mastery) with vocabulary tables (English / Nepali / Dhut / Akkha)
 - **Practice** — Interactive practice exercises
 - **Culture** — Magar cultural context and background
 - **Profile** — User profile and progress tracking
@@ -14,20 +14,40 @@ A web app for learning the Magar language, built with [Dioxus](https://dioxuslab
 
 ```
 magar-bhasa-sikha/
-├── assets/             # Static assets (favicon, CSS, images)
+├── assets/
+│   └── css/
+│       ├── main.css          # @import aggregator
+│       ├── tokens.css        # CSS custom properties (design tokens)
+│       ├── base.css          # Reset, html/body, element defaults
+│       ├── button.css
+│       ├── card.css
+│       ├── screen.css        # .screen, .screen-header, .back-btn
+│       ├── layout.css        # App shell + responsive breakpoints
+│       ├── sidebar.css       # Desktop sidebar nav
+│       ├── bottom-nav.css    # Mobile bottom nav
+│       ├── home.css
+│       ├── learn.css         # Stage path + stage cards
+│       ├── practice.css
+│       ├── culture.css
+│       ├── profile.css
+│       └── lesson.css        # Lesson screen, vocab table, script cards
 ├── src/
-│   ├── main.rs         # App entry point and route definitions
+│   ├── main.rs               # App entry point and route definitions
+│   ├── data.rs               # Static lesson content (VocabItem, Lesson, Stage)
+│   ├── state.rs              # Progress state management
 │   └── components/
 │       ├── mod.rs
-│       ├── layout.rs   # Shared app layout / nav
+│       ├── layout.rs         # Shared app shell (sidebar + bottom nav)
 │       ├── home.rs
-│       ├── learn.rs
+│       ├── learn.rs          # Stage list
+│       ├── stage_lessons.rs  # Lesson list within a stage
+│       ├── lesson.rs         # Individual lesson view (vocab table / script cards)
 │       ├── practice.rs
 │       ├── culture.rs
 │       └── profile.rs
-├── Cargo.toml          # Rust dependencies and feature flags
-├── Dioxus.toml         # Dioxus / web configuration
-└── tailwind.css        # Tailwind CSS entry file
+├── Cargo.toml                # Rust dependencies and feature flags
+├── Dioxus.toml               # Dioxus / web configuration
+└── tailwind.css              # Tailwind CSS entry file
 ```
 
 ## Tech Stack
@@ -36,7 +56,19 @@ magar-bhasa-sikha/
 |------|---------|
 | [Rust](https://www.rust-lang.org/) | Language |
 | [Dioxus 0.7](https://dioxuslabs.com/) | UI framework (web/desktop/mobile) |
-| [Tailwind CSS](https://tailwindcss.com/) | Styling |
+| Custom CSS (BEM) | Component styles, design tokens |
+| [Tailwind CSS](https://tailwindcss.com/) | Utility classes and preflight reset |
+
+## Data Model
+
+Each vocabulary item has four fields displayed as table columns in a lesson:
+
+| Field | Description |
+|-------|-------------|
+| `english` | English word or phrase |
+| `nepali` | Nepali translation (Devanagari) |
+| `dhut` | Magar Dhut romanized |
+| `akkha` | Akkha script (placeholder until font is embedded) |
 
 ## Getting Started
 
@@ -65,17 +97,11 @@ dx serve --platform desktop
 dx build --release --platform web
 ```
 
-## Tailwind CSS
+## CSS Architecture
 
-Dioxus 0.7+ handles Tailwind automatically. Just run `dx serve` — no separate Tailwind process needed.
+Styles are split into per-concern files under `assets/css/`. `main.css` imports them in dependency order — tokens and base first, then primitives (button, card), then the app shell, then each screen.
 
-To customize the input file, edit `Dioxus.toml`:
-
-```toml
-[application]
-tailwind_input = "tailwind.css"
-tailwind_output = "assets/tailwind.out.css"
-```
+To add styles for a new screen, create `assets/css/<screen>.css` and add an `@import` line to `main.css`.
 
 ## License
 
