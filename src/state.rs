@@ -1,5 +1,30 @@
 use dioxus::prelude::*;
 
+// ─── UserPreferences ───────────────────────────────────────────────────────
+
+/// Display preferences that persist across lessons for the session.
+///
+/// Nepali is always visible — it is the primary reference language.
+/// English is additive: toggling it adds a second reference column.
+#[derive(Debug, Clone, PartialEq)]
+pub struct UserPreferences {
+    pub show_english: bool,
+}
+
+impl Default for UserPreferences {
+    fn default() -> Self {
+        Self { show_english: false }
+    }
+}
+
+pub fn provide_preferences() {
+    use_context_provider(|| Signal::new(UserPreferences::default()));
+}
+
+pub fn use_preferences() -> Signal<UserPreferences> {
+    use_context::<Signal<UserPreferences>>()
+}
+
 // ─── UserProgress ──────────────────────────────────────────────────────────
 
 #[derive(Debug, Clone, PartialEq)]

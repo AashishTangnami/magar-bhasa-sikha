@@ -1,0 +1,40 @@
+stage_id,lesson_id,lesson_title,lesson_subtitle,english,nepali,dhut
+1,1,Greetings,Hello and farewell in Magar Dhut,Hello / Greetings,नमस्ते,Jhorle
+1,1,Greetings,Hello and farewell in Magar Dhut,Respectful greeting,नमस्कार,Namaskaar
+1,1,Greetings,Hello and farewell in Magar Dhut,Thank you,धन्यवाद,Dhanyabad
+1,1,Greetings,Hello and farewell in Magar Dhut,Goodbye,अलविदा,Alvida
+1,1,Greetings,Hello and farewell in Magar Dhut,Yes,हो,Ho
+1,1,Greetings,Hello and farewell in Magar Dhut,No,होइन,Hoina
+1,2,Introducing Yourself,Say who you are,I / Me,म,Ma
+1,2,Introducing Yourself,Say who you are,You,तिमी,Timī
+1,2,Introducing Yourself,Say who you are,Name,नाम,Nāu
+1,2,Introducing Yourself,Say who you are,My name is …,मेरो नाम … हो,Mero nāu … ho
+1,2,Introducing Yourself,Say who you are,What is your name?,तिम्रो नाम के हो?,Timro nāu ke ho?
+1,2,Introducing Yourself,Say who you are,Where are you from?,कहाँ बाट?,Kaha bata?
+1,3,Numbers 1–5,Count in Magar Dhut,One (1),एक,Ek
+1,3,Numbers 1–5,Count in Magar Dhut,Two (2),दुई,Du
+1,3,Numbers 1–5,Count in Magar Dhut,Three (3),तीन,Sum
+1,3,Numbers 1–5,Count in Magar Dhut,Four (4),चार,Li
+1,3,Numbers 1–5,Count in Magar Dhut,Five (5),पाँच,Nga
+1,4,Numbers 6–10,Continue counting,Six (6),छ,Thuk
+1,4,Numbers 6–10,Continue counting,Seven (7),सात,Saat
+1,4,Numbers 6–10,Continue counting,Eight (8),आठ,Bret
+1,4,Numbers 6–10,Continue counting,Nine (9),नौ,No
+1,4,Numbers 6–10,Continue counting,Ten (10),दस,Gip
+1,5,Family Words,Talk about your family,Mother,आमा,Aama
+1,5,Family Words,Talk about your family,Father,बाबा,Baba
+1,5,Family Words,Talk about your family,Elder brother,दाजु,Daju
+1,5,Family Words,Talk about your family,Elder sister,दिदी,Didi
+1,5,Family Words,Talk about your family,Younger brother,भाइ,Bhai
+1,5,Family Words,Talk about your family,Younger sister,बहिनी,Bahini
+1,6,Everyday Words,Words you'll use every day,Water,पानी,Paani
+1,6,Everyday Words,Words you'll use every day,Rice / Meal,भात,Bhat
+1,6,Everyday Words,Words you'll use every day,Home / House,घर,Ghar
+1,6,Everyday Words,Words you'll use every day,Day,दिन,Din
+1,6,Everyday Words,Words you'll use every day,Night,रात,Raat
+1,6,Everyday Words,Words you'll use every day,Yesterday / Tomorrow,कल,Kal
+1,8,Foundations Review,Review everything from Stage 1,Hello,नमस्ते,Jhorle
+1,8,Foundations Review,Review everything from Stage 1,I / You,म / तिमी,Ma / Timī
+1,8,Foundations Review,Review everything from Stage 1,One through Ten,एक देखि दस,Ek … Gip
+1,8,Foundations Review,Review everything from Stage 1,Mother / Father,आमा / बाबा,Aama / Baba
+1,8,Foundations Review,Review everything from Stage 1,Rice / Water,भात / पानी,Bhat / Paani

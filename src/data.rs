@@ -1,175 +1,253 @@
 // ─── Data model ────────────────────────────────────────────────────────────
 //
-// All lesson content is static. Language data uses romanized Magar Dhut;
-// Akkha script characters will be added once the custom font is embedded.
+// Types only. All content lives in data/*.csv — edit those files to add
+// or change lessons. No content is hardcoded here.
 
-// ─── Vocabulary ────────────────────────────────────────────────────────────
+use std::collections::BTreeMap;
+use std::sync::OnceLock;
+
+use serde::Deserialize;
+
+// ─── Public types ──────────────────────────────────────────────────────────
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct VocabItem {
-    pub english: &'static str,
-    pub nepali:  &'static str,
-    pub dhut:    &'static str,   // Magar Dhut (romanized)
-    pub akkha:   &'static str,   // Akkha script (placeholder until font is embedded)
+    pub english: String,
+    pub nepali:  String,
+    pub dhut:    String,
+    pub akkha:   Option<String>, // None until Akkha font is embedded and content is authored
 }
-
-// ─── Script ────────────────────────────────────────────────────────────────
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct ScriptItem {
-    pub symbol:  &'static str, // Akkha character (or romanized stand-in)
-    pub sound:   &'static str, // IPA / pronunciation guide
-    pub example: &'static str, // short example
+    pub symbol:  String,
+    pub sound:   String,
+    pub example: String,
 }
-
-// ─── Lesson ────────────────────────────────────────────────────────────────
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum LessonContent {
     Vocabulary(Vec<VocabItem>),
     Script {
-        description: &'static str,
-        items: Vec<ScriptItem>,
+        description: String,
+        items:       Vec<ScriptItem>,
     },
 }
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Lesson {
+    pub stage_id: usize,
     pub id:       usize,
-    pub title:    &'static str,
-    pub subtitle: &'static str,
+    pub title:    String,
+    pub subtitle: String,
     pub content:  LessonContent,
 }
 
-// ─── Stage 1: Foundations ──────────────────────────────────────────────────
-
-pub fn stage1_lessons() -> Vec<Lesson> {
-    vec![
-        Lesson {
-            id: 1,
-            title: "Greetings",
-            subtitle: "Hello and farewell in Magar Dhut",
-            content: LessonContent::Vocabulary(vec![
-                VocabItem { english: "Hello / Greetings",   nepali: "नमस्ते",    dhut: "Jhorle",             akkha: "—" },
-                VocabItem { english: "Respectful greeting", nepali: "नमस्कार",   dhut: "Namaskaar",          akkha: "—" },
-                VocabItem { english: "Thank you",           nepali: "धन्यवाद",   dhut: "Dhanyabad",          akkha: "—" },
-                VocabItem { english: "Goodbye",             nepali: "अलविदा",    dhut: "Alvida",             akkha: "—" },
-                VocabItem { english: "Yes",                 nepali: "हो",        dhut: "Ho",                 akkha: "—" },
-                VocabItem { english: "No",                  nepali: "होइन",      dhut: "Hoina",              akkha: "—" },
-            ]),
-        },
-        Lesson {
-            id: 2,
-            title: "Introducing Yourself",
-            subtitle: "Say who you are",
-            content: LessonContent::Vocabulary(vec![
-                VocabItem { english: "I / Me",              nepali: "म",                 dhut: "Ma",                  akkha: "—" },
-                VocabItem { english: "You",                 nepali: "तिमी",               dhut: "Timī",                akkha: "—" },
-                VocabItem { english: "Name",                nepali: "नाम",               dhut: "Nāu",                 akkha: "—" },
-                VocabItem { english: "My name is …",        nepali: "मेरो नाम … हो",     dhut: "Mero nāu … ho",       akkha: "—" },
-                VocabItem { english: "What is your name?",  nepali: "तिम्रो नाम के हो?", dhut: "Timro nāu ke ho?",    akkha: "—" },
-                VocabItem { english: "Where are you from?", nepali: "कहाँ बाट?",         dhut: "Kaha bata?",          akkha: "—" },
-            ]),
-        },
-        Lesson {
-            id: 3,
-            title: "Numbers 1–5",
-            subtitle: "Count in Magar Dhut",
-            content: LessonContent::Vocabulary(vec![
-                VocabItem { english: "One (1)",   nepali: "एक",   dhut: "Ek",  akkha: "—" },
-                VocabItem { english: "Two (2)",   nepali: "दुई",  dhut: "Du",  akkha: "—" },
-                VocabItem { english: "Three (3)", nepali: "तीन",  dhut: "Sum", akkha: "—" },
-                VocabItem { english: "Four (4)",  nepali: "चार",  dhut: "Li",  akkha: "—" },
-                VocabItem { english: "Five (5)",  nepali: "पाँच", dhut: "Nga", akkha: "—" },
-            ]),
-        },
-        Lesson {
-            id: 4,
-            title: "Numbers 6–10",
-            subtitle: "Continue counting",
-            content: LessonContent::Vocabulary(vec![
-                VocabItem { english: "Six (6)",   nepali: "छ",   dhut: "Thuk", akkha: "—" },
-                VocabItem { english: "Seven (7)", nepali: "सात", dhut: "Saat", akkha: "—" },
-                VocabItem { english: "Eight (8)", nepali: "आठ",  dhut: "Bret", akkha: "—" },
-                VocabItem { english: "Nine (9)",  nepali: "नौ",  dhut: "No",   akkha: "—" },
-                VocabItem { english: "Ten (10)",  nepali: "दस",  dhut: "Gip",  akkha: "—" },
-            ]),
-        },
-        Lesson {
-            id: 5,
-            title: "Family Words",
-            subtitle: "Talk about your family",
-            content: LessonContent::Vocabulary(vec![
-                VocabItem { english: "Mother",          nepali: "आमा",   dhut: "Aama",   akkha: "—" },
-                VocabItem { english: "Father",          nepali: "बाबा",  dhut: "Baba",   akkha: "—" },
-                VocabItem { english: "Elder brother",   nepali: "दाजु",  dhut: "Daju",   akkha: "—" },
-                VocabItem { english: "Elder sister",    nepali: "दिदी",  dhut: "Didi",   akkha: "—" },
-                VocabItem { english: "Younger brother", nepali: "भाइ",   dhut: "Bhai",   akkha: "—" },
-                VocabItem { english: "Younger sister",  nepali: "बहिनी", dhut: "Bahini", akkha: "—" },
-            ]),
-        },
-        Lesson {
-            id: 6,
-            title: "Everyday Words",
-            subtitle: "Words you'll use every day",
-            content: LessonContent::Vocabulary(vec![
-                VocabItem { english: "Water",                nepali: "पानी", dhut: "Paani", akkha: "—" },
-                VocabItem { english: "Rice / Meal",          nepali: "भात",  dhut: "Bhat",  akkha: "—" },
-                VocabItem { english: "Home / House",         nepali: "घर",   dhut: "Ghar",  akkha: "—" },
-                VocabItem { english: "Day",                  nepali: "दिन",  dhut: "Din",   akkha: "—" },
-                VocabItem { english: "Night",                nepali: "रात",  dhut: "Raat",  akkha: "—" },
-                VocabItem { english: "Yesterday / Tomorrow", nepali: "कल",   dhut: "Kal",   akkha: "—" },
-            ]),
-        },
-        Lesson {
-            id: 7,
-            title: "Akkha Script: Vowels",
-            subtitle: "The six core vowel sounds",
-            content: LessonContent::Script {
-                description: "The Akkha script has independent vowel letters. Each has its own shape and sound.",
-                items: vec![
-                    ScriptItem { symbol: "a",  sound: "/a/",  example: "as in 'father'" },
-                    ScriptItem { symbol: "aa", sound: "/aː/", example: "long 'a' — held longer" },
-                    ScriptItem { symbol: "i",  sound: "/i/",  example: "as in 'tree'" },
-                    ScriptItem { symbol: "u",  sound: "/u/",  example: "as in 'moon'" },
-                    ScriptItem { symbol: "e",  sound: "/e/",  example: "as in 'say'" },
-                    ScriptItem { symbol: "o",  sound: "/o/",  example: "as in 'go'" },
-                ],
-            },
-        },
-        Lesson {
-            id: 8,
-            title: "Foundations Review",
-            subtitle: "Review everything from Stage 1",
-            content: LessonContent::Vocabulary(vec![
-                VocabItem { english: "Hello",            nepali: "नमस्ते",       dhut: "Jhorle",       akkha: "—" },
-                VocabItem { english: "I / You",          nepali: "म / तिमी",     dhut: "Ma / Timī",    akkha: "—" },
-                VocabItem { english: "One through Ten",  nepali: "एक देखि दस",  dhut: "Ek … Gip",     akkha: "—" },
-                VocabItem { english: "Mother / Father",  nepali: "आमा / बाबा",   dhut: "Aama / Baba",  akkha: "—" },
-                VocabItem { english: "Rice / Water",     nepali: "भात / पानी",   dhut: "Bhat / Paani", akkha: "—" },
-            ]),
-        },
-    ]
-}
-
-// ─── Stage registry ────────────────────────────────────────────────────────
-
+#[derive(Debug, Clone, PartialEq)]
 pub struct StageMeta {
     pub id:    usize,
-    pub name:  &'static str,
-    pub desc:  &'static str,
-    pub total: usize,
+    pub name:  String,
+    pub desc:  String,
+    pub total: usize, // number of lessons — derived from CSV rows, not hardcoded
 }
 
+// ─── Public API ────────────────────────────────────────────────────────────
+
+/// All lessons for a given stage, in lesson-id order.
+/// Returns an empty Vec for stages with no content yet (shows "Coming Soon").
+pub fn get_lessons_for_stage(stage_id: usize) -> Vec<Lesson> {
+    lessons()
+        .iter()
+        .filter(|l| l.stage_id == stage_id)
+        .cloned()
+        .collect()
+}
+
+/// All stages in order, with live lesson counts derived from the CSV data.
 pub fn all_stages() -> Vec<StageMeta> {
-    vec![
-        StageMeta { id: 1, name: "Foundations",    desc: "Script basics, greetings, and numbers",   total: 8 },
-        StageMeta { id: 2, name: "Basic Literacy",  desc: "Reading simple words and phrases",        total: 0 },
-        StageMeta { id: 3, name: "Word Building",   desc: "Combining sounds and letters",            total: 0 },
-        StageMeta { id: 4, name: "Reading",         desc: "Short sentences and passages",            total: 0 },
-        StageMeta { id: 5, name: "Writing",         desc: "Writing words and sentences",             total: 0 },
-        StageMeta { id: 6, name: "Listening",       desc: "Audio comprehension practice",            total: 0 },
-        StageMeta { id: 7, name: "Speaking",        desc: "Pronunciation and fluency",               total: 0 },
-        StageMeta { id: 8, name: "Mastery",         desc: "Full fluency exercises",                  total: 0 },
-    ]
+    let all_lessons = lessons();
+    raw_stages()
+        .iter()
+        .map(|row| {
+            let total = all_lessons.iter().filter(|l| l.stage_id == row.id).count();
+            StageMeta {
+                id:    row.id,
+                name:  row.name.clone(),
+                desc:  row.desc.clone(),
+                total,
+            }
+        })
+        .collect()
+}
+
+/// Metadata for a single stage.
+pub fn get_stage(stage_id: usize) -> Option<StageMeta> {
+    all_stages().into_iter().find(|s| s.id == stage_id)
+}
+
+// ─── CSV row types (private — deserialization only) ────────────────────────
+
+#[derive(Debug, Deserialize)]
+struct StageRow {
+    id:   usize,
+    name: String,
+    desc: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct VocabRow {
+    stage_id:       usize,
+    lesson_id:      usize,
+    lesson_title:   String,
+    lesson_subtitle: String,
+    english:        String,
+    nepali:         String,
+    dhut:           String,
+}
+
+#[derive(Debug, Deserialize)]
+struct ScriptRow {
+    stage_id:        usize,
+    lesson_id:       usize,
+    lesson_title:    String,
+    lesson_subtitle: String,
+    description:     String,
+    symbol:          String,
+    sound:           String,
+    example:         String,
+}
+
+// ─── Parse and cache ────────────────────────────────────────────────────────
+
+static LESSONS:    OnceLock<Vec<Lesson>>   = OnceLock::new();
+static RAW_STAGES: OnceLock<Vec<StageRow>> = OnceLock::new();
+
+fn lessons() -> &'static Vec<Lesson> {
+    LESSONS.get_or_init(parse_all_lessons)
+}
+
+fn raw_stages() -> &'static Vec<StageRow> {
+    RAW_STAGES.get_or_init(parse_stages)
+}
+
+fn parse_stages() -> Vec<StageRow> {
+    let src = include_str!("../data/stages.csv");
+    csv::Reader::from_reader(src.as_bytes())
+        .deserialize::<StageRow>()
+        .map(|r| r.expect("malformed stages.csv row"))
+        .collect()
+}
+
+fn parse_all_lessons() -> Vec<Lesson> {
+    // Key: (stage_id, lesson_id) — BTreeMap preserves insertion/sort order
+    let mut map: BTreeMap<(usize, usize), Lesson> = BTreeMap::new();
+
+    // ── Vocabulary lessons ──────────────────────────────────────────────────
+    let vocab_src = include_str!("../data/vocab_items.csv");
+    for row in csv::Reader::from_reader(vocab_src.as_bytes())
+        .deserialize::<VocabRow>()
+        .map(|r| r.expect("malformed vocab_items.csv row"))
+    {
+        let key = (row.stage_id, row.lesson_id);
+        let entry = map.entry(key).or_insert_with(|| Lesson {
+            stage_id: row.stage_id,
+            id:       row.lesson_id,
+            title:    row.lesson_title.clone(),
+            subtitle: row.lesson_subtitle.clone(),
+            content:  LessonContent::Vocabulary(Vec::new()),
+        });
+        if let LessonContent::Vocabulary(ref mut items) = entry.content {
+            items.push(VocabItem {
+                english: row.english,
+                nepali:  row.nepali,
+                dhut:    row.dhut,
+                akkha:   None,
+            });
+        }
+    }
+
+    // ── Script lessons ──────────────────────────────────────────────────────
+    let script_src = include_str!("../data/script_items.csv");
+    for row in csv::Reader::from_reader(script_src.as_bytes())
+        .deserialize::<ScriptRow>()
+        .map(|r| r.expect("malformed script_items.csv row"))
+    {
+        let key = (row.stage_id, row.lesson_id);
+        let entry = map.entry(key).or_insert_with(|| Lesson {
+            stage_id: row.stage_id,
+            id:       row.lesson_id,
+            title:    row.lesson_title.clone(),
+            subtitle: row.lesson_subtitle.clone(),
+            content:  LessonContent::Script {
+                description: row.description.clone(),
+                items:       Vec::new(),
+            },
+        });
+        if let LessonContent::Script { ref mut items, .. } = entry.content {
+            items.push(ScriptItem {
+                symbol:  row.symbol,
+                sound:   row.sound,
+                example: row.example,
+            });
+        }
+    }
+
+    map.into_values().collect()
+}
+
+// ─── Tests ─────────────────────────────────────────────────────────────────
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn stage1_has_eight_lessons() {
+        assert_eq!(get_lessons_for_stage(1).len(), 8);
+    }
+
+    #[test]
+    fn stage1_total_matches_lesson_count() {
+        let stages = all_stages();
+        let s1 = stages.iter().find(|s| s.id == 1).unwrap();
+        assert_eq!(s1.total, 8);
+    }
+
+    #[test]
+    fn empty_stage_returns_no_lessons() {
+        assert!(get_lessons_for_stage(2).is_empty());
+    }
+
+    #[test]
+    fn lesson1_is_vocabulary_with_six_items() {
+        let lessons = get_lessons_for_stage(1);
+        let l1 = lessons.iter().find(|l| l.id == 1).unwrap();
+        if let LessonContent::Vocabulary(items) = &l1.content {
+            assert_eq!(items.len(), 6);
+        } else {
+            panic!("lesson 1 should be Vocabulary");
+        }
+    }
+
+    #[test]
+    fn lesson7_is_script_with_six_items() {
+        let lessons = get_lessons_for_stage(1);
+        let l7 = lessons.iter().find(|l| l.id == 7).unwrap();
+        if let LessonContent::Script { items, .. } = &l7.content {
+            assert_eq!(items.len(), 6);
+        } else {
+            panic!("lesson 7 should be Script");
+        }
+    }
+
+    #[test]
+    fn get_stage_returns_correct_name() {
+        let s = get_stage(1).unwrap();
+        assert_eq!(s.name, "Foundations");
+    }
+
+    #[test]
+    fn all_eight_stages_present() {
+        assert_eq!(all_stages().len(), 8);
+    }
 }

@@ -1,21 +1,25 @@
 #![allow(non_snake_case)]
 use dioxus::prelude::*;
 
-use crate::data::stage1_lessons;
+use crate::data::{get_lessons_for_stage, get_stage};
 use crate::state::use_progress;
 use crate::Route;
 
 // ─── Stage Lessons screen ──────────────────────────────────────────────────
 //
-// Shown when the user taps a stage in Learn.
-// Currently only Stage 1 (Foundations) has real content.
+// Lists all lessons for any stage. Stages with no CSV content show "Coming Soon".
 
 #[component]
 pub fn StageLessons(stage_id: usize) -> Element {
-    let nav = use_navigator();
+    let nav     = use_navigator();
+    let lessons = get_lessons_for_stage(stage_id);
 
-    // Only Stage 1 is built so far
-    if stage_id != 1 {
+    // Stage name comes from CSV — no hardcoding
+    let stage_name = get_stage(stage_id)
+        .map(|s| s.name)
+        .unwrap_or_else(|| format!("Stage {stage_id}"));
+
+    if lessons.is_empty() {
         return rsx! {
             div { class: "screen",
                 button {
@@ -29,7 +33,6 @@ pub fn StageLessons(stage_id: usize) -> Element {
         };
     }
 
-    let lessons  = stage1_lessons();
     let progress = use_progress();
 
     rsx! {
@@ -42,8 +45,8 @@ pub fn StageLessons(stage_id: usize) -> Element {
                     "← Learn"
                 }
                 div {
-                    h1 { class: "text-2xl font-bold text-gray-900", "Foundations" }
-                    p { class: "text-sm text-gray-500", "Stage 1 · {lessons.len()} lessons" }
+                    h1 { class: "text-2xl font-bold text-gray-900", "{stage_name}" }
+                    p { class: "text-sm text-gray-500", "Stage {stage_id} · {lessons.len()} lessons" }
                 }
             }
 

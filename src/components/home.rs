@@ -17,7 +17,7 @@ pub fn Home() -> Element {
 
         let meta  = stages.iter().find(|s| s.id == sid);
         let total = meta.map(|s| s.total).unwrap_or(8);
-        let name  = meta.map(|s| s.name).unwrap_or("Foundations");
+        let name  = meta.map(|s| s.name.clone()).unwrap_or_else(|| "Foundations".to_string());
         let done  = p.completed_in_stage(sid);
         let pct   = if total > 0 { (done as f32 / total as f32 * 100.0) as u32 } else { 0 };
 

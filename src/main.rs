@@ -14,7 +14,7 @@ use components::practice::Practice;
 use components::profile::Profile;
 use components::stage_lessons::StageLessons;
 
-use state::provide_progress;
+use state::{provide_preferences, provide_progress};
 
 // ─── Routes ────────────────────────────────────────────────────────────────
 
@@ -52,6 +52,7 @@ fn main() {
 #[component]
 fn App() -> Element {
     provide_progress();
+    provide_preferences();
 
     rsx! {
         document::Link { rel: "icon", href: FAVICON }
