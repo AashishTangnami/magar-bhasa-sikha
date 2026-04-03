@@ -1,18 +1,18 @@
 #![allow(non_snake_case)]
 use dioxus::prelude::*;
 
-use crate::data::{get_lessons_for_stage, get_stage, LessonContent};
-use crate::state::{use_preferences, use_progress};
+use crate::content::use_app_data;
+use crate::core::content::LessonContent;
+use crate::session::{use_preferences, use_progress};
 use crate::Route;
 
-// ─── Lesson View ───────────────────────────────────────────────────────────
-
 #[component]
-pub fn LessonView(stage_id: usize, lesson_id: usize) -> Element {
-    let nav     = use_navigator();
-    let lessons = get_lessons_for_stage(stage_id);
-
-    let Some(lesson) = lessons.iter().find(|l| l.id == lesson_id) else {
+pub fn LessonView(stage_slug: String, lesson_slug: String) -> Element {
+    let app_data = use_app_data();
+    let nav = use_navigator();
+    let stage = app_data.stage(&stage_slug);
+    let lessons = app_data.lessons_for_stage(&stage_slug);
+    let Some(payload) = app_data.lesson_payload(&lesson_slug) else {
         return rsx! {
             div { class: "screen",
                 p { class: "text-gray-500", "Lesson not found." }
@@ -20,47 +20,40 @@ pub fn LessonView(stage_id: usize, lesson_id: usize) -> Element {
         };
     };
 
-    let stage_name = get_stage(stage_id)
-        .map(|s| s.name)
-        .unwrap_or_else(|| format!("Stage {stage_id}"));
-
-    let total        = lessons.len();
-    let pct          = (lesson_id as f32 / total as f32 * 100.0) as u32;
+    let stage_name = stage
+        .as_ref()
+        .map(|stage| stage.name.clone())
+        .unwrap_or_else(|| String::from("Stage"));
+    let total = lessons.len();
     let mut progress = use_progress();
-    let already_done = progress.read().is_completed(stage_id, lesson_id);
-    let mut prefs    = use_preferences();
+    let progress_state = progress.read().clone();
+    let already_done = progress_state.is_completed(&lesson_slug);
+    let pct = progress_state.stage_progress_percent(&lessons);
+    let lesson_label = progress_state.lesson_position_label(payload.order, total);
+    let mut prefs = use_preferences();
 
     rsx! {
         div { class: "screen",
-
-            // ── Header ──────────────────────────────────────────────────
             header { class: "flex items-center justify-between mb-4",
                 button {
                     class: "text-primary text-sm font-medium bg-transparent border-0 cursor-pointer",
                     onclick: move |_| { nav.go_back(); },
                     "← {stage_name}"
                 }
-                span { class: "text-sm text-gray-500",
-                    "Lesson {lesson_id} of {total}"
-                }
+                span { class: "text-sm text-gray-500", "{lesson_label}" }
             }
 
-            // ── Progress bar ────────────────────────────────────────────
             div { class: "h-1.5 rounded-full bg-gray-200 mb-6",
                 div { class: "h-full rounded-full bg-primary", style: "width: {pct}%" }
             }
 
-            // ── Lesson title ────────────────────────────────────────────
             div { class: "mb-6",
-                h1 { class: "text-2xl font-bold text-gray-900 mb-1", "{lesson.title}" }
-                p  { class: "text-gray-500", "{lesson.subtitle}" }
+                h1 { class: "text-2xl font-bold text-gray-900 mb-1", "{payload.title}" }
+                p  { class: "text-gray-500", "{payload.subtitle}" }
             }
 
-            // ── Content ─────────────────────────────────────────────────
-            match &lesson.content {
+            match &payload.content {
                 LessonContent::Vocabulary(items) => rsx! {
-                    // ── Translation toggle ───────────────────────────────────
-                    // Nepali is always shown. English is additive.
                     div { class: "flex items-center gap-2 mb-4",
                         span { class: "text-sm text-gray-500", "Translation:" }
                         button {
@@ -77,8 +70,6 @@ pub fn LessonView(stage_id: usize, lesson_id: usize) -> Element {
                         }
                     }
 
-                    // ── Vocabulary table ─────────────────────────────────────
-                    // Columns: Nepali (always) | English (if toggled) | Magar Dhut | Akkha
                     {
                         let show_english = prefs.read().show_english;
                         rsx! {
@@ -127,35 +118,61 @@ pub fn LessonView(stage_id: usize, lesson_id: usize) -> Element {
                 },
             }
 
-            // ── Complete / Next button ───────────────────────────────────
             div { class: "lesson-footer",
-                if already_done && lesson_id < total {
-                    button {
-                        class: "btn btn--outline",
-                        onclick: move |_| {
-                            nav.push(Route::LessonView { stage_id, lesson_id: lesson_id + 1 });
-                        },
-                        "Next Lesson →"
+                if already_done {
+                    if let Some(next_lesson) = app_data.next_lesson_summary(&lesson_slug) {
+                        if next_lesson.stage_slug == stage_slug {
+                            button {
+                                class: "btn btn--outline",
+                                onclick: move |_| {
+                                    nav.push(Route::LessonView {
+                                        stage_slug: stage_slug.clone(),
+                                        lesson_slug: next_lesson.slug.clone(),
+                                    });
+                                },
+                                "Next Lesson →"
+                            }
+                        } else {
+                            button {
+                                class: "btn btn--outline",
+                                onclick: move |_| { nav.push(Route::Learn {}); },
+                                "Back to Learn"
+                            }
+                        }
+                    } else {
+                        button {
+                            class: "btn btn--outline",
+                            onclick: move |_| { nav.push(Route::Learn {}); },
+                            "Back to Learn"
+                        }
                     }
-                } else if !already_done {
+                } else {
                     button {
                         class: "btn lesson-footer__complete-btn",
                         onclick: move |_| {
-                            progress.write().complete(stage_id, lesson_id, total);
-                            if lesson_id < total {
-                                nav.push(Route::LessonView { stage_id, lesson_id: lesson_id + 1 });
+                            let next_cursor = app_data.next_curriculum_cursor_after_lesson(&lesson_slug);
+                            progress.write().complete_lesson(&lesson_slug, next_cursor);
+
+                            if let Some(next_lesson) = app_data.next_lesson_summary(&lesson_slug) {
+                                if next_lesson.stage_slug == stage_slug {
+                                    nav.push(Route::LessonView {
+                                        stage_slug: stage_slug.clone(),
+                                        lesson_slug: next_lesson.slug.clone(),
+                                    });
+                                } else {
+                                    nav.push(Route::StageLessons {
+                                        stage_slug: next_lesson.stage_slug.clone(),
+                                    });
+                                }
+                            } else if let Some(next_stage) = app_data.next_stage(&stage_slug) {
+                                nav.push(Route::StageLessons {
+                                    stage_slug: next_stage.slug,
+                                });
                             } else {
-                                nav.push(Route::StageLessons { stage_id });
+                                nav.push(Route::Learn {});
                             }
                         },
                         "Complete & Continue →"
-                    }
-                } else {
-                    // Last lesson, already done
-                    button {
-                        class: "btn btn--outline",
-                        onclick: move |_| { nav.push(Route::Learn {}); },
-                        "Back to Learn"
                     }
                 }
             }

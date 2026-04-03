@@ -1,0 +1,6 @@
+id,icon,name,description,enabled
+letter-recognition,◎,Letter Recognition,Identify Akkha letters by sound,true
+sound-matching,♫,Sound Matching,Match sounds to written letters,true
+tracing,✎,Tracing,Trace letter shapes,true
+write-from-memory,✦,Write from Memory,Write letters without a guide,true
+script-quiz,★,Script Quiz,Test your Akkha knowledge,true

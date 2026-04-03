@@ -1,9 +1,9 @@
-id,name,desc
-1,Foundations,"Script basics, greetings, and numbers"
-2,Basic Literacy,Reading simple words and phrases
-3,Word Building,Combining sounds and letters
-4,Reading,Short sentences and passages
-5,Writing,Writing words and sentences
-6,Listening,Audio comprehension practice
-7,Speaking,Pronunciation and fluency
-8,Mastery,Full fluency exercises
+slug,stage_order,name,desc
+foundations,1,Foundations,"Script basics, greetings, and numbers"
+basic-literacy,2,Basic Literacy,Reading simple words and phrases
+word-building,3,Word Building,Combining sounds and letters
+reading,4,Reading,Short sentences and passages
+writing,5,Writing,Writing words and sentences
+listening,6,Listening,Audio comprehension practice
+speaking,7,Speaking,Pronunciation and fluency
+mastery,8,Mastery,Full fluency exercises

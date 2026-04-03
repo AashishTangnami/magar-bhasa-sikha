@@ -2963,6 +2963,8 @@ dependencies = [
  "csv",
  "dioxus",
  "serde",
+ "serde_json",
+ "web-sys",
 ]
 
 [[package]]

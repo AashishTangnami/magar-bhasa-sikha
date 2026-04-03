@@ -1,7 +1,7 @@
-stage_id,lesson_id,lesson_title,lesson_subtitle,description,symbol,sound,example
-1,7,Akkha Script: Vowels,The six core vowel sounds,The Akkha script has independent vowel letters. Each has its own shape and sound.,a,/a/,as in 'father'
-1,7,Akkha Script: Vowels,The six core vowel sounds,The Akkha script has independent vowel letters. Each has its own shape and sound.,aa,/aː/,long 'a' — held longer
-1,7,Akkha Script: Vowels,The six core vowel sounds,The Akkha script has independent vowel letters. Each has its own shape and sound.,i,/i/,as in 'tree'
-1,7,Akkha Script: Vowels,The six core vowel sounds,The Akkha script has independent vowel letters. Each has its own shape and sound.,u,/u/,as in 'moon'
-1,7,Akkha Script: Vowels,The six core vowel sounds,The Akkha script has independent vowel letters. Each has its own shape and sound.,e,/e/,as in 'say'
-1,7,Akkha Script: Vowels,The six core vowel sounds,The Akkha script has independent vowel letters. Each has its own shape and sound.,o,/o/,as in 'go'
+stage_slug,stage_order,module_slug,module_order,lesson_slug,lesson_order,lesson_title,lesson_subtitle,description,symbol,sound,example
+foundations,1,foundations-script,3,akkha-script-vowels,1,Akkha Script: Vowels,The six core vowel sounds,The Akkha script has independent vowel letters. Each has its own shape and sound.,a,/a/,as in 'father'
+foundations,1,foundations-script,3,akkha-script-vowels,1,Akkha Script: Vowels,The six core vowel sounds,The Akkha script has independent vowel letters. Each has its own shape and sound.,aa,/aː/,long 'a' — held longer
+foundations,1,foundations-script,3,akkha-script-vowels,1,Akkha Script: Vowels,The six core vowel sounds,The Akkha script has independent vowel letters. Each has its own shape and sound.,i,/i/,as in 'tree'
+foundations,1,foundations-script,3,akkha-script-vowels,1,Akkha Script: Vowels,The six core vowel sounds,The Akkha script has independent vowel letters. Each has its own shape and sound.,u,/u/,as in 'moon'
+foundations,1,foundations-script,3,akkha-script-vowels,1,Akkha Script: Vowels,The six core vowel sounds,The Akkha script has independent vowel letters. Each has its own shape and sound.,e,/e/,as in 'say'
+foundations,1,foundations-script,3,akkha-script-vowels,1,Akkha Script: Vowels,The six core vowel sounds,The Akkha script has independent vowel letters. Each has its own shape and sound.,o,/o/,as in 'go'
