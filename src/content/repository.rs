@@ -1,3 +1,4 @@
+use std::collections::hash_map::Entry;
 use std::collections::HashMap;
 
 use crate::core::content::{
@@ -28,10 +29,10 @@ pub struct CsvCurriculumRepository {
 }
 
 impl CsvCurriculumRepository {
-    pub fn load() -> Self {
-        Self {
-            snapshot: parse_csv_snapshot(),
-        }
+    pub fn load() -> Result<Self, String> {
+        Ok(Self {
+            snapshot: parse_csv_snapshot()?,
+        })
     }
 }
 
@@ -151,14 +152,59 @@ impl CurriculumRepository for CsvCurriculumRepository {
     }
 }
 
-pub(crate) fn index_by_slug<T, F>(items: &[T], get_slug: F) -> HashMap<String, T>
+pub(crate) fn index_by_slug<T, F>(
+    items: &[T],
+    collection_name: &str,
+    get_slug: F,
+) -> Result<HashMap<String, T>, String>
 where
     T: Clone,
     F: Fn(&T) -> &str,
 {
-    items
-        .iter()
-        .cloned()
-        .map(|item| (get_slug(&item).to_string(), item))
-        .collect()
+    let mut indexed = HashMap::with_capacity(items.len());
+
+    for item in items.iter().cloned() {
+        let slug = get_slug(&item).to_string();
+        match indexed.entry(slug.clone()) {
+            Entry::Vacant(entry) => {
+                entry.insert(item);
+            }
+            Entry::Occupied(_) => {
+                return Err(format!(
+                    "duplicate slug '{slug}' found while indexing {collection_name}"
+                ));
+            }
+        }
+    }
+
+    Ok(indexed)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::index_by_slug;
+
+    #[derive(Clone, Debug)]
+    struct TestItem {
+        slug: &'static str,
+    }
+
+    #[test]
+    fn index_by_slug_returns_error_for_duplicate_slug() {
+        let items = [
+            TestItem {
+                slug: "foundations",
+            },
+            TestItem {
+                slug: "foundations",
+            },
+        ];
+
+        let error = index_by_slug(&items, "test-items", |item| item.slug).unwrap_err();
+
+        assert_eq!(
+            error,
+            "duplicate slug 'foundations' found while indexing test-items"
+        );
+    }
 }

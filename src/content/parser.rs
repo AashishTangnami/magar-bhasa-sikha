@@ -3,8 +3,8 @@ use std::collections::{BTreeMap, HashMap};
 use serde::Deserialize;
 
 use crate::core::content::{
-    CultureItem, LessonContent, LessonKind, LessonPayload, LessonSummary, ModuleSummary,
-    PracticeActivity, ScriptItem, StageSummary, VocabItem,
+    CultureItem, LessonContent, LessonPayload, LessonSummary, ModuleSummary, PracticeActivity,
+    ScriptItem, StageSummary, VocabItem,
 };
 
 use super::repository::index_by_slug;
@@ -88,21 +88,24 @@ struct PracticeRow {
     enabled: bool,
 }
 
-pub(super) fn parse_csv_snapshot() -> CsvSnapshot {
+pub(super) fn parse_csv_snapshot() -> Result<CsvSnapshot, String> {
     let lesson_payloads = parse_lesson_payloads();
     let all_lessons = ordered_lesson_summaries(&lesson_payloads);
     let modules = parse_modules(&all_lessons);
     let stages = parse_stages(&modules, &all_lessons);
 
-    let stages_by_slug = index_by_slug(&stages, |stage| stage.slug.as_str());
+    let stages_by_slug = index_by_slug(&stages, "stages", |stage| stage.slug.as_str())?;
     let lessons_by_stage = group_lessons_by_stage(&all_lessons);
     let lessons_by_module = group_lessons_by_module(&all_lessons);
-    let lesson_summaries_by_slug = index_by_slug(&all_lessons, |lesson| lesson.slug.as_str());
-    let lesson_payloads_by_slug =
-        index_by_slug(&lesson_payloads, |payload| payload.lesson_slug.as_str());
+    let lesson_summaries_by_slug = index_by_slug(&all_lessons, "lesson summaries", |lesson| {
+        lesson.slug.as_str()
+    })?;
+    let lesson_payloads_by_slug = index_by_slug(&lesson_payloads, "lesson payloads", |payload| {
+        payload.lesson_slug.as_str()
+    })?;
     let modules_by_stage = group_modules_by_stage(&modules);
 
-    CsvSnapshot {
+    Ok(CsvSnapshot {
         stages,
         stages_by_slug,
         modules_by_stage,
@@ -113,7 +116,7 @@ pub(super) fn parse_csv_snapshot() -> CsvSnapshot {
         all_lessons,
         culture_items: parse_culture_items(),
         practice_activities: parse_practice_activities(),
-    }
+    })
 }
 
 fn parse_stages(modules: &[ModuleSummary], lessons: &[LessonSummary]) -> Vec<StageSummary> {
@@ -178,7 +181,6 @@ fn parse_lesson_payloads() -> Vec<LessonPayload> {
                 title: row.lesson_title.clone(),
                 subtitle: row.lesson_subtitle.clone(),
                 order: row.lesson_order,
-                kind: LessonKind::Vocabulary,
                 content: LessonContent::Vocabulary(Vec::new()),
             });
 
@@ -208,7 +210,6 @@ fn parse_lesson_payloads() -> Vec<LessonPayload> {
                 title: row.lesson_title.clone(),
                 subtitle: row.lesson_subtitle.clone(),
                 order: row.lesson_order,
-                kind: LessonKind::Script,
                 content: LessonContent::Script {
                     description: row.description.clone(),
                     items: Vec::new(),

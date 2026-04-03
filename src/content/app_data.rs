@@ -16,7 +16,12 @@ impl AppData {
     pub fn shared() -> Self {
         static APP_DATA: OnceLock<AppData> = OnceLock::new();
         APP_DATA
-            .get_or_init(|| AppData(Arc::new(CsvCurriculumRepository::load())))
+            .get_or_init(|| {
+                let repository = CsvCurriculumRepository::load().unwrap_or_else(|error| {
+                    panic!("failed to load curriculum repository: {error}")
+                });
+                AppData(Arc::new(repository))
+            })
             .clone()
     }
 

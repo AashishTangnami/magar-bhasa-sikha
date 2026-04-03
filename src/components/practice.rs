@@ -53,7 +53,7 @@ fn PracticeItem(icon: String, name: String, desc: String, enabled: bool) -> Elem
                 p { class: "text-sm text-gray-500", "{desc}" }
             }
             if enabled {
-                span { class: "text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded-full shrink-0", "Ready" }
+                span { class: "text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded-full shrink-0", "Available" }
             } else {
                 span { class: "text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full shrink-0", "Coming Soon" }
             }

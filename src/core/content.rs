@@ -30,6 +30,15 @@ pub enum LessonKind {
     Script,
 }
 
+impl LessonContent {
+    pub fn kind(&self) -> LessonKind {
+        match self {
+            Self::Vocabulary(_) => LessonKind::Vocabulary,
+            Self::Script { .. } => LessonKind::Script,
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct StageSummary {
     pub slug: String,
@@ -73,7 +82,6 @@ pub struct LessonPayload {
     pub title: String,
     pub subtitle: String,
     pub order: usize,
-    pub kind: LessonKind,
     pub content: LessonContent,
 }
 
@@ -88,7 +96,7 @@ impl LessonPayload {
             title: self.title.clone(),
             subtitle: self.subtitle.clone(),
             order: self.order,
-            kind: self.kind.clone(),
+            kind: self.content.kind(),
         }
     }
 }
