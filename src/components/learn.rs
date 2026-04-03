@@ -57,38 +57,46 @@ fn StageRow(stage_slug: String, stage: StageSummary, done: usize, status: StageS
     } else {
         String::from("Coming soon")
     };
+    let stage_body = rsx! {
+        div { class: "{status.css_number()}",
+            if status.is_completed() { "✓" } else { "{stage.order}" }
+        }
+        div { class: "flex-1 min-w-0",
+            h3 { class: "text-base font-semibold text-gray-900", "{stage.name}" }
+            p  { class: "text-sm text-gray-500", "{stage.desc}" }
+            if stage.lesson_count > 0 {
+                p { class: "text-xs text-gray-400 mt-0.5", "{progress_label}" }
+            }
+        }
+        if stage.lesson_count == 0 {
+            span { class: "text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full shrink-0", "Coming Soon" }
+        } else if status.is_current() {
+            span { class: "text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded-full shrink-0", "In Progress" }
+        }
+        if !status.is_clickable(stage.lesson_count > 0) {
+            span { class: "text-gray-400 shrink-0", "🔒" }
+        }
+        if clickable && !status.is_current() {
+            span { class: "text-gray-400 text-lg shrink-0", "›" }
+        }
+    };
 
     rsx! {
-        div {
-            class:    "{status.css_row()} {cursor_class}",
-            role:     if clickable { "button" } else { "listitem" },
-            tabindex: if clickable { "0" } else { "-1" },
-            onclick:  move |_| {
-                if clickable {
+        if clickable {
+            button {
+                r#type: "button",
+                class: "{status.css_row()} {cursor_class}",
+                onclick: move |_| {
                     nav.push(Route::StageLessons { stage_slug: stage_slug.clone() });
-                }
-            },
-
-            div { class: "{status.css_number()}",
-                if status.is_completed() { "✓" } else { "{stage.order}" }
+                },
+                {stage_body}
             }
-            div { class: "flex-1 min-w-0",
-                h3 { class: "text-base font-semibold text-gray-900", "{stage.name}" }
-                p  { class: "text-sm text-gray-500", "{stage.desc}" }
-                if stage.lesson_count > 0 {
-                    p { class: "text-xs text-gray-400 mt-0.5", "{progress_label}" }
-                }
-            }
-            if stage.lesson_count == 0 {
-                span { class: "text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full shrink-0", "Coming Soon" }
-            } else if status.is_current() {
-                span { class: "text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded-full shrink-0", "In Progress" }
-            }
-            if !status.is_clickable(stage.lesson_count > 0) {
-                span { class: "text-gray-400 shrink-0", "🔒" }
-            }
-            if clickable && !status.is_current() {
-                span { class: "text-gray-400 text-lg shrink-0", "›" }
+        } else {
+            div {
+                class: "{status.css_row()} {cursor_class}",
+                role: "listitem",
+                tabindex: "-1",
+                {stage_body}
             }
         }
     }

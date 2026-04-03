@@ -46,11 +46,63 @@ create table if not exists lesson_script_items (
 
 create table if not exists learner_progress (
     id uuid primary key default gen_random_uuid(),
-    user_id uuid not null,
-    current_stage_slug text not null,
-    current_module_slug text,
-    current_lesson_slug text,
-    last_visited_lesson_slug text,
-    completed_lesson_slugs jsonb not null default '[]'::jsonb,
+    user_id uuid not null unique,
+    current_stage_id uuid not null references stages(id),
+    current_module_id uuid references modules(id),
+    current_lesson_id uuid references lessons(id),
+    last_visited_lesson_id uuid references lessons(id),
+    completed_lesson_ids jsonb not null default '[]'::jsonb,
     updated_at timestamptz not null default now()
 );
+
+do $$
+begin
+    if not exists (
+        select 1 from pg_constraint where conname = 'stages_order_positive'
+    ) then
+        alter table stages
+            add constraint stages_order_positive
+            check (stage_order > 0);
+    end if;
+
+    if not exists (
+        select 1 from pg_constraint where conname = 'stages_stage_order_unique'
+    ) then
+        alter table stages
+            add constraint stages_stage_order_unique
+            unique (stage_order);
+    end if;
+
+    if not exists (
+        select 1 from pg_constraint where conname = 'modules_order_positive'
+    ) then
+        alter table modules
+            add constraint modules_order_positive
+            check (module_order > 0);
+    end if;
+
+    if not exists (
+        select 1 from pg_constraint where conname = 'modules_stage_order_unique'
+    ) then
+        alter table modules
+            add constraint modules_stage_order_unique
+            unique (stage_id, module_order);
+    end if;
+
+    if not exists (
+        select 1 from pg_constraint where conname = 'lessons_order_positive'
+    ) then
+        alter table lessons
+            add constraint lessons_order_positive
+            check (lesson_order > 0);
+    end if;
+
+    if not exists (
+        select 1 from pg_constraint where conname = 'lessons_module_order_unique'
+    ) then
+        alter table lessons
+            add constraint lessons_module_order_unique
+            unique (module_id, lesson_order);
+    end if;
+end
+$$;

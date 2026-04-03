@@ -10,7 +10,13 @@ use crate::Route;
 pub fn LessonView(stage_slug: String, lesson_slug: String) -> Element {
     let app_data = use_app_data();
     let nav = use_navigator();
-    let stage = app_data.stage(&stage_slug);
+    let Some(stage) = app_data.stage(&stage_slug) else {
+        return rsx! {
+            div { class: "screen",
+                p { class: "text-gray-500", "Stage not found." }
+            }
+        };
+    };
     let lessons = app_data.lessons_for_stage(&stage_slug);
     let Some(payload) = app_data.lesson_payload(&lesson_slug) else {
         return rsx! {
@@ -19,17 +25,25 @@ pub fn LessonView(stage_slug: String, lesson_slug: String) -> Element {
             }
         };
     };
+    let lesson_index = lessons
+        .iter()
+        .position(|lesson| lesson.slug == lesson_slug)
+        .map(|index| index + 1);
+    if payload.stage_slug != stage_slug || lesson_index.is_none() {
+        return rsx! {
+            div { class: "screen",
+                p { class: "text-gray-500", "Lesson not found." }
+            }
+        };
+    }
 
-    let stage_name = stage
-        .as_ref()
-        .map(|stage| stage.name.clone())
-        .unwrap_or_else(|| String::from("Stage"));
+    let stage_name = stage.name.clone();
     let total = lessons.len();
     let mut progress = use_progress();
     let progress_state = progress.read().clone();
     let already_done = progress_state.is_completed(&lesson_slug);
     let pct = progress_state.stage_progress_percent(&lessons);
-    let lesson_label = progress_state.lesson_position_label(payload.order, total);
+    let lesson_label = progress_state.lesson_position_label(lesson_index.unwrap_or(1), total);
     let mut prefs = use_preferences();
 
     rsx! {
@@ -135,8 +149,12 @@ pub fn LessonView(stage_slug: String, lesson_slug: String) -> Element {
                         } else {
                             button {
                                 class: "btn btn--outline",
-                                onclick: move |_| { nav.push(Route::Learn {}); },
-                                "Back to Learn"
+                                onclick: move |_| {
+                                    nav.push(Route::StageLessons {
+                                        stage_slug: next_lesson.stage_slug.clone(),
+                                    });
+                                },
+                                "Next Stage →"
                             }
                         }
                     } else {

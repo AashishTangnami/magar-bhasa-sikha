@@ -17,12 +17,11 @@ pub fn Profile() -> Element {
         .map(|stage| stage.name.clone())
         .unwrap_or_else(|| String::from("Learning Path"));
     let current_stage_lessons = app_data.lessons_for_stage(&progress_state.current.stage_slug);
-    let current_lesson_label =
-        if progress_state.current.lesson_order.is_some() && !current_stage_lessons.is_empty() {
-            progress_state.current_lesson_label(current_stage_lessons.len())
-        } else {
-            String::from("New content coming soon")
-        };
+    let current_lesson_label = if !current_stage_lessons.is_empty() {
+        progress_state.current_lesson_label(&current_stage_lessons)
+    } else {
+        String::from("New content coming soon")
+    };
     let completed_in_stage = progress_state.completed_lessons_in_stage(&current_stage_lessons);
     let stage_progress_label = if !current_stage_lessons.is_empty() {
         format!(
@@ -66,9 +65,8 @@ pub fn Profile() -> Element {
                             id: "show-english",
                             r#type: "checkbox",
                             checked: preferences.read().show_english,
-                            onchange: move |_| {
-                                let current = preferences.read().show_english;
-                                preferences.write().show_english = !current;
+                            oninput: move |evt| {
+                                preferences.write().show_english = evt.checked();
                             }
                         }
                     }

@@ -167,6 +167,16 @@ pub struct UserProgress {
 impl Default for UserProgress {
     fn default() -> Self {
         Self {
+            current: LearningCursor::new(String::from("foundations"), 1, None, None, None, None),
+            completed_lesson_slugs: vec![],
+            last_visited_lesson_slug: None,
+        }
+    }
+}
+
+impl UserProgress {
+    pub fn demo_user_progress() -> Self {
+        Self {
             current: LearningCursor::new(
                 String::from("foundations"),
                 1,
@@ -182,9 +192,7 @@ impl Default for UserProgress {
             last_visited_lesson_slug: Some(String::from("numbers-1-5")),
         }
     }
-}
 
-impl UserProgress {
     pub fn is_completed(&self, lesson_slug: &str) -> bool {
         self.completed_lesson_slugs
             .iter()
@@ -225,17 +233,31 @@ impl UserProgress {
         self.stage_progress_percent(lessons)
     }
 
-    pub fn lesson_position_label(&self, lesson_order: usize, stage_total: usize) -> String {
-        format!("Lesson {lesson_order} of {stage_total}")
+    pub fn lesson_position_label(&self, lesson_index: usize, stage_total: usize) -> String {
+        format!("Lesson {lesson_index} of {stage_total}")
     }
 
-    pub fn current_lesson_label(&self, stage_total: usize) -> String {
-        self.lesson_position_label(self.current.lesson_order.unwrap_or(1), stage_total)
+    pub fn current_lesson_label(&self, lessons: &[LessonSummary]) -> String {
+        let lesson_index = self
+            .current
+            .lesson_slug
+            .as_ref()
+            .and_then(|slug| lessons.iter().position(|lesson| lesson.slug == *slug))
+            .map(|index| index + 1)
+            .unwrap_or(1);
+
+        self.lesson_position_label(lesson_index, lessons.len())
     }
 
     pub fn lesson_status(&self, lesson: &LessonSummary) -> LessonStatus {
         if self.is_completed(&lesson.slug) {
             return LessonStatus::Done;
+        }
+        if self.current.stage_slug == lesson.stage_slug && self.current.lesson_slug.is_none() {
+            if lesson.module_order == 1 && lesson.order == 1 {
+                return LessonStatus::Active;
+            }
+            return LessonStatus::Locked;
         }
         if self.current.lesson_slug.as_deref() == Some(lesson.slug.as_str()) {
             return LessonStatus::Active;
@@ -279,7 +301,16 @@ mod tests {
     use crate::core::content::{LessonKind, LessonSummary, StageSummary};
 
     fn progress() -> UserProgress {
-        UserProgress::default()
+        UserProgress::demo_user_progress()
+    }
+
+    #[test]
+    fn default_progress_starts_new_user_at_beginning() {
+        let progress = UserProgress::default();
+        assert_eq!(progress.current.stage_slug, "foundations");
+        assert_eq!(progress.current.lesson_slug, None);
+        assert!(progress.completed_lesson_slugs.is_empty());
+        assert_eq!(progress.last_visited_lesson_slug, None);
     }
 
     fn lesson(
@@ -444,6 +475,16 @@ mod tests {
 
     #[test]
     fn current_lesson_label_uses_current_position() {
-        assert_eq!(progress().current_lesson_label(8), "Lesson 3 of 8");
+        let lessons = vec![
+            lesson("greetings", 1, 1, 1),
+            lesson("introducing-yourself", 1, 1, 2),
+            lesson("numbers-1-5", 1, 1, 3),
+            lesson("numbers-6-10", 1, 1, 4),
+            lesson("family-words", 1, 2, 1),
+            lesson("everyday-words", 1, 2, 2),
+            lesson("akkha-script-vowels", 1, 3, 1),
+            lesson("foundations-review", 1, 3, 2),
+        ];
+        assert_eq!(progress().current_lesson_label(&lessons), "Lesson 3 of 8");
     }
 }
