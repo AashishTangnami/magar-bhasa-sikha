@@ -26,11 +26,11 @@ pub fn AppLayout() -> Element {
 pub fn Sidebar() -> Element {
     let route = use_route::<Route>();
 
-    let home_active     = matches!(&route, Route::Home {});
-    let learn_active    = matches!(&route, Route::Learn {});
+    let home_active = matches!(&route, Route::Home {});
+    let learn_active = matches!(&route, Route::Learn {});
     let practice_active = matches!(&route, Route::Practice {});
-    let culture_active  = matches!(&route, Route::Culture {});
-    let profile_active  = matches!(&route, Route::Profile {});
+    let culture_active = matches!(&route, Route::Culture {});
+    let profile_active = matches!(&route, Route::Profile {});
 
     rsx! {
         aside {
@@ -84,11 +84,11 @@ pub fn Sidebar() -> Element {
 pub fn BottomNav() -> Element {
     let route = use_route::<Route>();
 
-    let home_active     = matches!(&route, Route::Home {});
-    let learn_active    = matches!(&route, Route::Learn {});
+    let home_active = matches!(&route, Route::Home {});
+    let learn_active = matches!(&route, Route::Learn {});
     let practice_active = matches!(&route, Route::Practice {});
-    let culture_active  = matches!(&route, Route::Culture {});
-    let profile_active  = matches!(&route, Route::Profile {});
+    let culture_active = matches!(&route, Route::Culture {});
+    let profile_active = matches!(&route, Route::Profile {});
 
     rsx! {
         nav {
