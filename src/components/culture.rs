@@ -1,20 +1,35 @@
 #![allow(non_snake_case)]
 use dioxus::prelude::*;
 
+use crate::content::use_app_data;
+
 #[component]
 pub fn Culture() -> Element {
+    let app_data = use_app_data();
+    let culture_items = app_data.culture_items();
+
     rsx! {
         div { class: "screen",
             header { class: "mb-6",
                 h1 { class: "text-2xl font-bold text-gray-900", "Magar Culture" }
                 p { class: "text-sm text-gray-500 mt-1", "Connect with your roots" }
             }
-            div { class: "flex flex-col gap-4",
-                CultureItem { category: "Festival",       title: "Maghe Sankranti",   desc: "The Magar people celebrate the harvest with dance, music, and traditional foods." }
-                CultureItem { category: "Community Life", title: "Rodhi Culture",     desc: "Young Magars gather in the Rodhi house to sing, dance, and share stories." }
-                CultureItem { category: "Clothing",       title: "Traditional Dress", desc: "Magar attire reflects community identity, pride, and cultural heritage." }
-                CultureItem { category: "Music",          title: "Folk Songs",        desc: "Sorathi and other folk songs pass wisdom and stories across generations." }
-                CultureItem { category: "Language",       title: "Magar Dhut",        desc: "Magar Dhut is the mother tongue of the Magar people, written in Akkha script." }
+            if culture_items.is_empty() {
+                div { class: "bg-white rounded-2xl p-5 border border-gray-100",
+                    h2 { class: "text-lg font-semibold text-gray-900 mb-2", "Coming Soon" }
+                    p { class: "text-sm text-gray-500", "Culture cards will appear here once content is added to the CSV data files." }
+                }
+            } else {
+                div { class: "flex flex-col gap-4",
+                    for item in culture_items {
+                        CultureItem {
+                            key: "{item.id}",
+                            category: item.category.clone(),
+                            title: item.title.clone(),
+                            desc: item.summary.clone(),
+                        }
+                    }
+                }
             }
         }
     }

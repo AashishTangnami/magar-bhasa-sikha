@@ -2,8 +2,10 @@
 use dioxus::prelude::*;
 
 mod components;
-mod data;
-mod state;
+mod content;
+mod core;
+mod preferences;
+mod session;
 
 use components::culture::Culture;
 use components::home::Home;
@@ -14,9 +16,8 @@ use components::practice::Practice;
 use components::profile::Profile;
 use components::stage_lessons::StageLessons;
 
-use state::{provide_preferences, provide_progress};
-
-// ─── Routes ────────────────────────────────────────────────────────────────
+use content::provide_app_data;
+use session::{provide_preferences, provide_progress};
 
 #[derive(Debug, Clone, Routable, PartialEq)]
 #[rustfmt::skip]
@@ -26,10 +27,10 @@ pub enum Route {
         Home {},
         #[route("/learn")]
         Learn {},
-        #[route("/learn/stage/:stage_id")]
-        StageLessons { stage_id: usize },
-        #[route("/learn/stage/:stage_id/lesson/:lesson_id")]
-        LessonView { stage_id: usize, lesson_id: usize },
+        #[route("/learn/stage/:stage_slug")]
+        StageLessons { stage_slug: String },
+        #[route("/learn/stage/:stage_slug/lesson/:lesson_slug")]
+        LessonView { stage_slug: String, lesson_slug: String },
         #[route("/practice")]
         Practice {},
         #[route("/culture")]
@@ -38,12 +39,8 @@ pub enum Route {
         Profile {},
 }
 
-// ─── Assets ────────────────────────────────────────────────────────────────
-
 const FAVICON: Asset = asset!("/assets/favicon.ico");
-const CSS:     Asset = asset!("/assets/tailwind.css");
-
-// ─── Entry point ───────────────────────────────────────────────────────────
+const CSS: Asset = asset!("/assets/tailwind.css");
 
 fn main() {
     dioxus::launch(App);
@@ -51,6 +48,7 @@ fn main() {
 
 #[component]
 fn App() -> Element {
+    provide_app_data();
     provide_progress();
     provide_preferences();
 

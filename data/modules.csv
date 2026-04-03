@@ -1,0 +1,11 @@
+slug,stage_slug,stage_order,module_order,title
+foundations-core,foundations,1,1,Foundations Core
+foundations-family,foundations,1,2,Family and Everyday Words
+foundations-script,foundations,1,3,Akkha Script and Review
+basic-literacy-core,basic-literacy,2,1,Basic Literacy Core
+word-building-core,word-building,3,1,Word Building Core
+reading-core,reading,4,1,Reading Core
+writing-core,writing,5,1,Writing Core
+listening-core,listening,6,1,Listening Core
+speaking-core,speaking,7,1,Speaking Core
+mastery-core,mastery,8,1,Mastery Core

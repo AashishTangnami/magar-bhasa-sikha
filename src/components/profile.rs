@@ -1,76 +1,85 @@
 #![allow(non_snake_case)]
 use dioxus::prelude::*;
 
+use crate::content::use_app_data;
+use crate::session::{use_preferences, use_progress};
+
 #[component]
 pub fn Profile() -> Element {
+    let app_data = use_app_data();
+    let progress = use_progress();
+    let mut preferences = use_preferences();
+
+    let progress_state = progress.read().clone();
+    let current_stage = app_data.stage(&progress_state.current.stage_slug);
+    let current_stage_name = current_stage
+        .as_ref()
+        .map(|stage| stage.name.clone())
+        .unwrap_or_else(|| String::from("Learning Path"));
+    let current_stage_lessons = app_data.lessons_for_stage(&progress_state.current.stage_slug);
+    let current_lesson_label = if !current_stage_lessons.is_empty() {
+        progress_state.current_lesson_label(&current_stage_lessons)
+    } else {
+        String::from("New content coming soon")
+    };
+    let completed_in_stage = progress_state.completed_lessons_in_stage(&current_stage_lessons);
+    let stage_progress_label = if !current_stage_lessons.is_empty() {
+        format!(
+            "{completed_in_stage} of {} lessons",
+            current_stage_lessons.len()
+        )
+    } else {
+        String::from("Coming soon")
+    };
+    let total_completed = progress_state.total_completed_lessons();
+    let learner_initial = current_stage_name.chars().next().unwrap_or('L').to_string();
+
     rsx! {
         div { class: "screen",
             header { class: "mb-6",
                 h1 { class: "text-2xl font-bold text-gray-900", "Profile" }
             }
             div { class: "flex flex-col gap-6",
-
-                // ── Avatar row ───────────────────────────────────────────
                 div { class: "flex items-center gap-4",
                     div { class: "w-16 h-16 rounded-full bg-primary text-white flex items-center justify-center text-2xl font-bold shrink-0",
-                        "A"
+                        "{learner_initial}"
                     }
                     div {
                         h2 { class: "text-xl font-bold text-gray-900", "Learner" }
-                        p { class: "text-sm text-gray-500", "Foundations · Level 1" }
+                        p { class: "text-sm text-gray-500", "{current_stage_name}" }
                     }
                 }
 
-                // ── Progress ─────────────────────────────────────────────
                 ProfileSection { title: "Progress",
-                    ProfileRow { label: "Lessons completed", value: "3" }
-                    ProfileRow { label: "Akkha letters learned", value: "12" }
-                    ProfileRow { label: "Days learning", value: "7" }
+                    ProfileRow { label: "Lessons completed", value: total_completed.to_string() }
+                    ProfileRow { label: "Current stage", value: current_stage_name.clone() }
+                    ProfileRow { label: "Stage progress", value: stage_progress_label }
+                    ProfileRow { label: "Current lesson", value: current_lesson_label }
                 }
 
-                // ── Accessibility ────────────────────────────────────────
-                div { class: "bg-white rounded-2xl p-5 border border-gray-100 flex flex-col gap-3",
-                    h3 { class: "text-sm font-semibold text-gray-500 uppercase tracking-wide", "Accessibility" }
-                    div { class: "flex items-center justify-between py-1",
-                        label { r#for: "large-text", class: "text-sm text-gray-700", "Large Text" }
-                        input { id: "large-text", r#type: "checkbox" }
-                    }
-                    div { class: "flex items-center justify-between py-1",
-                        label { r#for: "high-contrast", class: "text-sm text-gray-700", "High Contrast" }
-                        input { id: "high-contrast", r#type: "checkbox" }
-                    }
-                    div { class: "flex items-center justify-between py-1",
-                        label { r#for: "audio-speed", class: "text-sm text-gray-700", "Slow Audio" }
-                        input { id: "audio-speed", r#type: "checkbox" }
-                    }
-                }
-
-                // ── Preferences ──────────────────────────────────────────
                 div { class: "bg-white rounded-2xl p-5 border border-gray-100 flex flex-col gap-3",
                     h3 { class: "text-sm font-semibold text-gray-500 uppercase tracking-wide", "Preferences" }
                     div { class: "flex items-center justify-between py-1",
-                        label { r#for: "interface-lang", class: "text-sm text-gray-700", "Interface Language" }
-                        select { id: "interface-lang", class: "text-sm text-gray-700 border border-gray-200 rounded-lg px-2 py-1",
-                            option { "English" }
-                            option { "Nepali" }
+                        label { r#for: "show-english", class: "text-sm text-gray-700", "Show English translations" }
+                        input {
+                            id: "show-english",
+                            r#type: "checkbox",
+                            checked: preferences.read().show_english,
+                            oninput: move |evt| {
+                                preferences.write().show_english = evt.checked();
+                            }
                         }
                     }
                 }
 
-                // ── Downloads ────────────────────────────────────────────
                 div { class: "bg-white rounded-2xl p-5 border border-gray-100 flex flex-col gap-3",
-                    h3 { class: "text-sm font-semibold text-gray-500 uppercase tracking-wide", "Downloads" }
-                    div { class: "flex items-center justify-between py-1",
-                        span { class: "text-sm text-gray-700", "Offline content" }
-                        button { class: "btn btn--outline btn--sm", "Manage" }
-                    }
+                    h3 { class: "text-sm font-semibold text-gray-500 uppercase tracking-wide", "Session" }
+                    p { class: "text-sm text-gray-700", "Progress and preferences are saved locally on this device for the web app." }
                 }
             }
         }
     }
 }
-
-// ─── Private sub-components ─────────────────────────────────────────────────
 
 #[component]
 fn ProfileSection(title: String, children: Element) -> Element {
