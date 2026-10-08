@@ -1,0 +1,12 @@
+node_modules
+dist
+dist-server
+coverage
+.env*
+!.env.example
+.harness
+.vscode
+.DS_Store
+*.log
+Dockerfile
+.dockerignore

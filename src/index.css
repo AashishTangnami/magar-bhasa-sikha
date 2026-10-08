@@ -1,0 +1,149 @@
+@import "tailwindcss";
+
+/* Bind `dark:` utilities to ThemeContext's `.dark` root class instead of the OS media query */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  body {
+    font-family: 'Lexend', 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  h1, h2, h3, .font-heading {
+    font-family: 'Lexend', 'Mukta', sans-serif;
+  }
+
+  .font-devanagari {
+    font-family: 'Mukta', sans-serif;
+  }
+
+  .font-akkha {
+    font-family: 'Noto Sans Brahmi', sans-serif;
+  }
+
+  .font-reading {
+    font-family: 'Lexend', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+}
+
+/* =========================================================
+   LIGHT THEME COMPATIBILITY LAYER
+   Only rules whose selectors still match classes used in src/ are kept.
+   Components written with `dark:` variants do not need these; they exist for
+   remaining views that still use dark-first classes unconditionally.
+   ========================================================= */
+
+.theme-bright,
+.light {
+  color-scheme: light;
+}
+
+.theme-bright header {
+  background-color: #ffffff !important;
+  border-color: #e7e5e4 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+.theme-bright footer {
+  background-color: #ffffff !important;
+  border-color: #e7e5e4 !important;
+  color: #78716c !important;
+}
+
+.theme-bright .bg-slate-800 {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a;
+}
+
+.theme-bright .bg-white\/5,
+.theme-bright .bg-white\/10 {
+  background-color: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+  color: #334155 !important;
+}
+
+.theme-bright .bg-amber-950\/40 {
+  background-color: #fef3c7 !important;
+  border-color: #fde68a !important;
+  color: #92400e !important;
+}
+
+.theme-bright .bg-emerald-950\/40 {
+  background-color: #d1fae5 !important;
+  border-color: #a7f3d0 !important;
+  color: #065f46 !important;
+}
+
+.theme-bright .border-white\/10,
+.theme-bright .border-white\/5,
+.theme-bright .border-white\/15 {
+  border-color: #e2e8f0 !important;
+}
+
+.theme-bright .text-white {
+  color: #0f172a !important;
+}
+
+.theme-bright .text-gray-300,
+.theme-bright .text-slate-300 {
+  color: #334155 !important;
+}
+
+.theme-bright .text-gray-400,
+.theme-bright .text-slate-400,
+.theme-bright .text-slate-500 {
+  color: #64748b !important;
+}
+
+.theme-bright .text-amber-300,
+.theme-bright .text-amber-400 {
+  color: #b45309 !important;
+}
+
+.theme-bright .hover\:bg-white\/\[0\.06\]:hover,
+.theme-bright .hover\:bg-white\/\[0\.04\]:hover,
+.theme-bright .hover\:bg-white\/5:hover,
+.theme-bright .hover\:bg-white\/10:hover {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+/* Inputs, Textareas, and Dropdowns in Bright Mode */
+.theme-bright input,
+.theme-bright textarea,
+.theme-bright select {
+  background-color: #ffffff !important;
+  color: #1c1917 !important;
+  border-color: #d6d3d1 !important;
+}
+
+.theme-bright input::placeholder,
+.theme-bright textarea::placeholder {
+  color: #a8a29e !important;
+}
+
+.theme-bright input:focus,
+.theme-bright textarea:focus,
+.theme-bright select:focus {
+  border-color: #d97706 !important;
+  box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.15) !important;
+}
+
+/* Card Shadow Polish */
+.theme-bright .rounded-2xl.border,
+.theme-bright .rounded-3xl.border,
+.theme-bright .rounded-xl.border {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+}
+
+/* Scrollbars in Bright Mode */
+.theme-bright ::-webkit-scrollbar-track {
+  background: #f5f5f4;
+}
+.theme-bright ::-webkit-scrollbar-thumb {
+  background: #d6d3d1;
+}
+.theme-bright ::-webkit-scrollbar-thumb:hover {
+  background: #d97706;
+}

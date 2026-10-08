@@ -1,0 +1,267 @@
+export interface ReferenceItem {
+  id: string;
+  category: 'academic' | 'literature' | 'script_unicode' | 'cultural_org' | 'sitemap';
+  title: string;
+  titleNepali: string;
+  authorOrOrg: string;
+  description: string;
+  url?: string;
+  internalTab?: 'home' | 'words' | 'sand' | 'dialects' | 'library' | 'keyboard' | 'wardrobe' | 'clans';
+  tags: string[];
+  yearOrType: string;
+}
+
+export const REFERENCES_DATA: ReferenceItem[] = [
+  // ==========================================
+  // 1. ACADEMIC & INSTITUTIONAL SOURCES
+  // ==========================================
+  {
+    id: 'lang-commission-nepal',
+    category: 'academic',
+    title: 'Language Commission of Nepal (भाषा आयोग, नेपाल)',
+    titleNepali: 'भाषा आयोग नेपालको मगर भाषा र लिपि प्रतिवेदन',
+    authorOrOrg: 'Language Commission of Nepal (भाषा आयोग)',
+    description: 'Official governmental research, grammar standardization, and sociolinguistic surveys documenting Magar Dhut, Kham Magar, and endangered Kaike languages of Nepal.',
+    url: 'https://languagecommission.gov.np/',
+    tags: ['Government', 'Grammar', 'Dhut', 'Kham', 'Kaike', 'Official Survey'],
+    yearOrType: 'Governmental Body',
+  },
+  {
+    id: 'nepal-magar-association',
+    category: 'cultural_org',
+    title: 'Nepal Magar Association (नेपाल मगर संघ - केन्द्रीय समिति)',
+    titleNepali: 'नेपाल मगर संघ केन्द्रीय समिति एवं सांस्कृतिक प्रतिष्ठान',
+    authorOrOrg: 'Central Committee of Nepal Magar Association',
+    description: 'The supreme representative cultural organization dedicated to preserving Magar identity, Akkha Lipi dissemination, customary rights, and the celebration of national festivals like Maghe Sankranti.',
+    url: 'https://www.nepalmagarassociation.org.np/',
+    tags: ['Culture', 'Akkha Lipi', 'Preservation', 'Community', 'Maghe Sankranti'],
+    yearOrType: 'Apex Cultural Body',
+  },
+  {
+    id: 'tu-linguistics-cdl',
+    category: 'academic',
+    title: 'Central Department of Linguistics, Tribhuvan University (CDL-TU)',
+    titleNepali: 'त्रिभुवन विश्वविद्यालय भाषाविज्ञान केन्द्रीय विभाग',
+    authorOrOrg: 'Tribhuvan University, Kirtipur',
+    description: 'Academic research repository, field recordings, and linguistic dissertations analyzing Sino-Tibetan phonology, tonogenesis in Kham, and morphology of Magaric languages.',
+    url: 'https://cdl.tu.edu.np/',
+    tags: ['Linguistics', 'Phonology', 'Morphology', 'Academic Research', 'TU'],
+    yearOrType: 'University Research',
+  },
+  {
+    id: 'nfdin-nepal',
+    category: 'cultural_org',
+    title: 'National Foundation for Development of Indigenous Nationalities (NFDIN)',
+    titleNepali: 'आदिवासी जनजाति उत्थान राष्ट्रिय प्रतिष्ठान (NFDIN)',
+    authorOrOrg: 'Government of Nepal / NFDIN',
+    description: 'Institutional publications, ethnographies, and historical documentations of the Magar indigenous community, covering Barha Magarat and Athara Magarat cultural practices.',
+    url: 'https://nfdin.gov.np/',
+    tags: ['Indigenous Heritage', 'Barha Magarat', 'Athara Magarat', 'Ethnography'],
+    yearOrType: 'National Foundation',
+  },
+  {
+    id: 'unesco-endangered-languages',
+    category: 'academic',
+    title: 'UNESCO World Atlas of Languages & Endangered Languages Project',
+    titleNepali: 'युनेस्को विश्व भाषा एटलस र लोपोन्मुख भाषा परियोजना (काइके भाषा)',
+    authorOrOrg: 'UNESCO / Endangered Languages Project (ELP)',
+    description: 'Global language vitality profiles documenting the severely endangered status of the Kaike language spoken exclusively in Tarakot, Dolpa (~1,500 native speakers).',
+    url: 'https://www.endangeredlanguages.com/lang/4347',
+    tags: ['UNESCO', 'Endangered Language', 'Kaike', 'Dolpa', 'Global Preservation'],
+    yearOrType: 'International Atlas',
+  },
+  {
+    id: 'nepal-music-drama-academy',
+    category: 'cultural_org',
+    title: 'Nepal Academy of Music and Drama (नेपाल संगीत तथा नाट्य प्रज्ञा प्रतिष्ठान)',
+    titleNepali: 'नेपाल संगीत तथा नाट्य प्रज्ञा प्रतिष्ठान (लोक नृत्य तथा बाजा अभिलेख)',
+    authorOrOrg: 'Nepal Academy of Music and Drama',
+    description: 'Ethnomusicological field studies, rhythm notation, and oral history archives on traditional Magar folk dances: Kauda, Sorathi, Maruni, Salaijo, and Bhume Naach.',
+    url: 'https://namd.gov.np/',
+    tags: ['Folk Dance', 'Kauda', 'Sorathi', 'Maruni', 'Salaijo', 'Madal Acoustics'],
+    yearOrType: 'National Arts Academy',
+  },
+  {
+    id: 'dept-archaeology-nepal',
+    category: 'academic',
+    title: 'Department of Archaeology, Nepal (पुरातत्व विभाग)',
+    titleNepali: 'पुरातत्व विभाग - मध्यकालीन ताम्रपत्र तथा शिलालेख अभिलेख',
+    authorOrOrg: 'Department of Archaeology, Government of Nepal',
+    description: 'Historical archives preserving medieval copper-plate inscriptions (Tamrapatra), royal decrees of Magarat chieftains, and stone pillar epigraphs.',
+    url: 'https://doa.gov.np/',
+    tags: ['Archaeology', 'Inscriptions', 'Copper Plates', 'Tamrapatra', 'Medieval History'],
+    yearOrType: 'Governmental Archive',
+  },
+
+  // ==========================================
+  // 2. SCRIPT & UNICODE STANDARDS
+  // ==========================================
+  {
+    id: 'unicode-utc-proposal',
+    category: 'script_unicode',
+    title: 'Unicode Technical Committee (UTC) Akkha Script Documentation',
+    titleNepali: 'युनिकोड कन्सोर्टियम अक्खा लिपि प्रस्तावना तथा मानक',
+    authorOrOrg: 'Unicode Consortium / Script Encoding Initiative (SEI)',
+    description: 'Technical proposal and script analysis for encoding the indigenous Magar Akkha Lipi writing system in the Supplementary Multilingual Plane (SMP) of the Universal Coded Character Set (UCS).',
+    url: 'https://www.unicode.org/',
+    tags: ['Unicode', 'Akkha Lipi', 'ISO-10646', 'Font Standardization', 'Digital Script'],
+    yearOrType: 'Technical Standard',
+  },
+  {
+    id: 'omniglot-scriptsource-magar',
+    category: 'script_unicode',
+    title: 'Omniglot & ScriptSource Writing Systems: Magar Akkha Lipi',
+    titleNepali: 'अम्निग्लट तथा स्क्रिप्टसोर्स: मगर अक्खा लिपि वर्णमाला',
+    authorOrOrg: 'Omniglot / SIL International ScriptSource',
+    description: 'Comprehensive guide to the Akkha Lipi alphabet, abugida vowel-diacritic signs (Matras), conjunct consonants, numerals, and historical calligraphy.',
+    url: 'https://www.omniglot.com/',
+    tags: ['Alphabet', 'Consonants', 'Vowels', 'Barakhari', 'Typography', 'Calligraphy'],
+    yearOrType: 'Writing System Portal',
+  },
+
+  // ==========================================
+  // 3. SCHOLARLY LITERATURE & RESEARCH PAPERS
+  // ==========================================
+  {
+    id: 'kham-magar-grammar-watters',
+    category: 'literature',
+    title: 'A Grammar of Kham (Cambridge Grammatical Descriptions)',
+    titleNepali: 'खाम मगर व्याकरण तथा शब्दकोश अनुसन्धान',
+    authorOrOrg: 'David E. Watters (Ph.D., Cambridge University Press)',
+    description: 'The monumental grammatical documentation of the Kham Magar language, exploring its split-ergative syntax, tonal registers, complex verbal morphology, and ethnohistorical context.',
+    tags: ['Kham Grammar', 'Cambridge Press', 'David Watters', 'Morphology', 'Linguistics'],
+    yearOrType: 'Scholarly Book (2002)',
+  },
+  {
+    id: 'magar-history-budha-magar',
+    category: 'literature',
+    title: 'Barha Magarat Ra Athara Magaratko Aitihasik Prishthabhumi',
+    titleNepali: 'बाह्र मगरात र अठारह मगरातको ऐतिहासिक पृष्ठभूमि',
+    authorOrOrg: 'Dr. Harsh Bahadur Budha Magar',
+    description: 'Authoritative historical chronicle analyzing the pre-unification Magarat confederacies, ancient kingdom forts (Kot), royal lineages, and military contributions.',
+    tags: ['Magarat History', '12 Magarat', '18 Magarat', 'Historical Chronicle', 'Dr. Harsh Bahadur'],
+    yearOrType: 'Historical Monograph',
+  },
+  {
+    id: 'magar-language-script-bk-rana',
+    category: 'literature',
+    title: 'Magar Language, Akkha Script and Cultural Roots',
+    titleNepali: 'मगर भाषा, अक्खा लिपि र सांस्कृतिक जराहरू',
+    authorOrOrg: 'B.K. Rana & M.S. Thapa Magar',
+    description: 'Linguistic study exploring the decipherment, epigraphy, and traditional education methodologies of the Akkha script alongside Magar Dhut oral literature.',
+    tags: ['Akkha Script', 'Epigraphy', 'B.K. Rana', 'M.S. Thapa', 'Decipherment'],
+    yearOrType: 'Linguistic Study',
+  },
+  {
+    id: 'people-of-nepal-dor-bahadur',
+    category: 'literature',
+    title: 'People of Nepal & Fatalism and Development (Magar Chapters)',
+    titleNepali: 'पिपल अफ नेपाल - डोरबहादुर विष्ट (मगर समुदाय अध्ययन)',
+    authorOrOrg: 'Prof. Dor Bahadur Bista',
+    description: 'Foundational anthropological texts detailing the kinship systems, Rodhi socialization, pastoral economy, and religious syncretism of the Magars of Western and Central Nepal.',
+    tags: ['Anthropology', 'Dor Bahadur Bista', 'Kinship', 'Rodhi', 'Ethnography'],
+    yearOrType: 'Anthropological Text (1967)',
+  },
+  {
+    id: 'kaike-endangered-documentation',
+    category: 'literature',
+    title: 'Kaike: Linguistic Description of a Severely Endangered Language',
+    titleNepali: 'काइके भाषा: संरचना, शब्द भण्डार र सामाजिक परिवेश',
+    authorOrOrg: 'Prof. Dr. Madhav Prasad Pokharel & CDL Research Team',
+    description: 'Comprehensive descriptive linguistics report documenting the unique vocabulary, nominal classifiers, and preservation urgency of the Kaike language in Dolpa.',
+    tags: ['Kaike', 'Dolpa', 'Descriptive Linguistics', 'Classifiers', 'Prof. Pokharel'],
+    yearOrType: 'Research Report',
+  },
+
+  // ==========================================
+  // 4. IN-APP SITEMAP & DEEP NAVIGATION LINKS
+  // ==========================================
+  {
+    id: 'sitemap-home',
+    category: 'sitemap',
+    title: 'Home & Introduction (गृह पृष्ठ तथा परिचय)',
+    titleNepali: 'अक्खा लिपि तथा मगर भाषाका तीन शाखाहरूको परिचयात्मक पोर्टल',
+    authorOrOrg: 'Akkha Magar Digital Platform',
+    description: 'The primary gateway introducing 11th-century Akkha Lipi, the 3 major dialects (Dhut, Kham, Kaike), interactive sample glyphs, and direct module launchpads.',
+    internalTab: 'home',
+    tags: ['Landing Page', 'Intro', 'Akkha Lipi', '3 Dialects', 'Overview'],
+    yearOrType: 'In-App Module',
+  },
+  {
+    id: 'sitemap-words',
+    category: 'sitemap',
+    title: 'Vocabularies & Phrases Hub (शब्दकोश तथा शब्दावली)',
+    titleNepali: '५००+ शब्द, फ्ल्यासकार्ड, शब्द-जोडी खेल र दैनिक संवाद',
+    authorOrOrg: 'Akkha Magar Lexicon Engine',
+    description: 'Extensive multi-dialect lexicon with search, Romanized phonetics, audio speech synthesis, interactive flashcards, word-tile memory games, and daily dialogues.',
+    internalTab: 'words',
+    tags: ['Vocabulary', 'Flashcards', 'Matching Game', 'Speech Synthesis', 'Lexicon'],
+    yearOrType: 'In-App Module',
+  },
+  {
+    id: 'sitemap-sand',
+    category: 'sitemap',
+    title: 'Akkha Sand Tracing Canvas (बालुवा अभ्यास क्यानभास)',
+    titleNepali: '४०+ अक्खा अक्षरहरूको बालुवामा औंलाले कोर्ने अभ्यास र स्कोर',
+    authorOrOrg: 'Akkha Magar Calligraphy Studio',
+    description: 'Interactive tactile sand canvas with numbered stroke order animations, acoustic sand friction sound feedback, real-time accuracy scoring, and Mundri rewards.',
+    internalTab: 'sand',
+    tags: ['Calligraphy', 'Sand Tracing', 'Stroke Order', 'Tactile Audio', 'Mundri Rewards'],
+    yearOrType: 'In-App Module',
+  },
+  {
+    id: 'sitemap-dialects',
+    category: 'sitemap',
+    title: 'Dialects Comparative Matrix (भाषिका तुलना म्याट्रिक्स)',
+    titleNepali: 'मगर धुत, खाम मगर र काइके भाषिकाको प्रत्यक्ष तुलनात्मक तालिका',
+    authorOrOrg: 'Akkha Magar Comparative Lab',
+    description: 'Deep-dive side-by-side linguistic comparison table across Magar Dhut, Kham Magar, and Kaike, complete with demographic maps and dialect switcher.',
+    internalTab: 'dialects',
+    tags: ['Comparative Matrix', 'Dhut', 'Kham', 'Kaike', 'Demographics', 'Dialect Switcher'],
+    yearOrType: 'In-App Module',
+  },
+  {
+    id: 'sitemap-library',
+    category: 'sitemap',
+    title: 'Heritage & Folk Dances (मौलिक सम्पदा र लोक नृत्य)',
+    titleNepali: 'कौरा, सोरठी, मारुनी, सालैजो, भूमे, १२ र १८ मगरात इतिहास र बाजागाजा',
+    authorOrOrg: 'Akkha Magar Cultural Treasury',
+    description: 'Treasury covering authentic folk dances with audio rhythm players, Barha/Athara Magarat kingdoms, clan matrix, sacred festivals (Maghi, Bhume), attire, instruments, and inscribed manuscripts.',
+    internalTab: 'library',
+    tags: ['Folk Dances', 'Kauda', 'Sorathi', 'Maruni', 'Salaijo', 'Bhume', 'History', 'Festivals'],
+    yearOrType: 'In-App Module',
+  },
+  {
+    id: 'sitemap-keyboard',
+    category: 'sitemap',
+    title: 'Virtual Akkha Keyboard & Scribe (भर्चुअल किबोर्ड)',
+    titleNepali: 'पूर्ण बाह्रखरी, युनिकोड कपी तथा टेक्स्ट फाइल डाउनलोड',
+    authorOrOrg: 'Akkha Magar Scribe Tool',
+    description: 'Full visual and hardware typing engine for Akkha Lipi, supporting vowels, consonants, Barakhari modifiers, conjuncts, and instant Unicode export.',
+    internalTab: 'keyboard',
+    tags: ['Virtual Keyboard', 'Barakhari', 'Unicode Export', 'Scribe', 'Typing Tool'],
+    yearOrType: 'In-App Module',
+  },
+  {
+    id: 'sitemap-wardrobe',
+    category: 'sitemap',
+    title: 'Traditional Attire & Avatar Wardrobe (भेषभूषा तथा अवतार)',
+    titleNepali: 'भाङ्ग्रा, घालेक, कण्ठ, मुन्द्री र सिरबन्दी सहितको अवतार कक्ष',
+    authorOrOrg: 'Akkha Magar Wardrobe Engine',
+    description: 'Avatar customization studio allowing learners to equip authentic Magar garments and heirloom jewelry unlocked through lessons and quiz mastery.',
+    internalTab: 'wardrobe',
+    tags: ['Avatar Wardrobe', 'Bhangra', 'Ghalek', 'Kantha', 'Sirbandi', 'Cultural Attire'],
+    yearOrType: 'In-App Module',
+  },
+  {
+    id: 'sitemap-clans',
+    category: 'sitemap',
+    title: 'Clans, Sub-Clans & Demography (मगर थर, उपथर तथा जनसाङ्ख्यिकी)',
+    titleNepali: '७ प्रमुख थर, ७०+ उपथर (पाचा) र राष्ट्रिय जनगणना २०७८ विवरण',
+    authorOrOrg: 'Akkha Magar Genealogical Registry',
+    description: 'Complete directory of Magar clans (Thapa, Rana, Ale, Pun, Budha, Gharti, Roka), their sub-clans, Kulpuja traditions, and province-wise census demographics.',
+    internalTab: 'clans',
+    tags: ['Clans', 'Sub-clans', 'Demographics', 'Census 2021', 'Genealogy', 'Kulpuja'],
+    yearOrType: 'In-App Module',
+  },
+];

@@ -1,141 +1,56 @@
-# Magar Bhasa Sikha
+# Akkha Magar
 
-A Dioxus + Rust app for learning **Magar Dhut** with **Akkha script** support.
+A Magar language and heritage platform: Akkha Lipi sand tracing, the Dhut / Kham / Kaike dialect matrix, lessons, daily conversations, clans and demography, and a cultural heritage archive.
 
-## What the app does
+## Requirements
 
-- **Home** shows current learning progress, practice readiness, and a culture highlight
-- **Learn** presents the staged learning path from Foundations to Mastery
-- **Stage Lessons** lists lesson summaries grouped by module inside each stage
-- **Lesson View** loads a lesson payload by stable lesson slug
-- **Practice** lists Akkha practice activities from structured app data
-- **Culture** shows cultural cards loaded from content data
-- **Profile** shows real learner progress and the working translation preference
+- Node.js 24 (see `.nvmrc`; `nvm use` / `fnm use`)
+- [Bun](https://bun.sh) for installing dependencies (`bun.lock` is the lockfile)
+- Docker, for building the production image
 
-## Current architecture
-
-The codebase is split into four clear concerns:
-
-| Layer | Path | Responsibility |
-|------|------|----------------|
-| Core | `src/core/` | Pure curriculum types and progress logic |
-| Content | `src/content/` | Curriculum repository, CSV seed parsing, and `AppData` access |
-| Session | `src/session.rs`, `src/preferences.rs` | Dioxus context providers and local persistence |
-| UI | `src/components/` | Rendering and navigation only |
-
-### Important rules
-
-- Lesson and stage status logic lives in `src/core/progress.rs`
-- Curriculum identity uses stable human-readable slugs
-- Stages remain top-level UX, but curriculum data is now `stage -> module -> lesson`
-- Screens read curriculum data through `use_app_data()`
-- CSV is currently the local seed/source format
-- Supabase is the intended runtime source of truth as the app grows
-
-## Project structure
-
-```text
-magar-bhasa-sikha/
-├── data/
-│   ├── stages.csv
-│   ├── modules.csv
-│   ├── vocab_items.csv
-│   ├── script_items.csv
-│   ├── culture_items.csv
-│   └── practice_activities.csv
-├── db/
-│   └── schema.sql
-├── src/
-│   ├── main.rs
-│   ├── session.rs
-│   ├── preferences.rs
-│   ├── core/
-│   │   ├── content.rs
-│   │   └── progress.rs
-│   ├── content/
-│   │   ├── app_data.rs
-│   │   ├── repository.rs
-│   │   └── parser.rs
-│   └── components/
-│       ├── home.rs
-│       ├── learn.rs
-│       ├── stage_lessons.rs
-│       ├── lesson.rs
-│       ├── practice.rs
-│       ├── culture.rs
-│       ├── profile.rs
-│       └── layout.rs
-├── ARCHITECTURE.md
-└── AGENTS.md
-```
-
-## Curriculum model
-
-The app now uses these runtime concepts:
-
-- `StageSummary`
-- `ModuleSummary`
-- `LessonSummary`
-- `LessonPayload`
-
-The current UI still feels stage/lesson-based, but the data model is already prepared for growth.
-
-### Stable IDs
-
-- Stages use slugs such as `foundations`
-- Modules use slugs such as `foundations-core`
-- Lessons use slugs such as `greetings` or `akkha-script-vowels`
-
-Display order is stored separately as `stage_order`, `module_order`, and `lesson_order`.
-
-## Content source strategy
-
-Current local development flow:
-
-1. CSV files define seed curriculum content
-2. The CSV-backed repository loads stage/module/lesson summaries and lesson payloads
-3. UI components query content through `AppData`
-
-Target scale direction:
-
-- Supabase becomes the runtime source of truth
-- CSV remains a seed/import format, not the long-term runtime delivery format
-
-## Persistence
-
-For the web app, these values are stored in browser `localStorage`:
-
-- `UserProgress`
-- `UserPreferences`
-
-This is still local-only session persistence. Supabase-backed learner progress is the next runtime boundary, not yet the active implementation.
-
-## Development
-
-### Prerequisites
-
-- Rust
-- Dioxus CLI: `cargo install dioxus-cli`
-- Node.js for Tailwind CLI
-
-### Run the app
+## Local development
 
 ```bash
-dx serve --platform web
+bun install
+npm run dev            # Express + Vite dev server on http://localhost:3000
 ```
 
-### Rebuild Tailwind output
+## Checks
 
 ```bash
-npx tailwindcss -i tailwind.css -o assets/tailwind.css
+npx vitest run                      # unit tests
+npm run lint                        # TypeScript
+bash .harness/sensors/run-all.sh    # full harness gate (requires ripgrep: brew install ripgrep)
+npm run bench                       # DOD hot-path micro-benchmarks
 ```
 
-### Verify
+## Production build
 
 ```bash
-cargo test
+npm run build          # client bundle → dist/ (with .br/.gz/.zst precompressed variants)
+                       # server bundle → dist-server/server.cjs
+NODE_ENV=production npm start
 ```
 
-## License
+## Container image
 
-MIT
+The `Dockerfile` produces a small, portable image (Node 24, production dependencies only, non-root user, health check on `/api/health`) that runs on any container host.
+
+```bash
+docker build -t akkha-magar .
+docker run --rm -p 3000:3000 akkha-magar
+curl -sI -H 'Accept-Encoding: br' http://localhost:3000/   # expect Content-Encoding: br
+```
+
+## Configuration
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `PORT` | `3000` | Listening port. Container platforms set this automatically. |
+| `NODE_ENV` | — | `production` serves the prebuilt `dist/`; otherwise runs the Vite dev server. |
+
+See `.env.example`.
+
+## Deploying
+
+Push the image to any registry and run it on a container platform (e.g. Cloud Run, Fly.io, Render, Railway, or a VPS with Docker). The server listens on `$PORT`, shuts down gracefully on `SIGTERM`, and needs no secrets or external services.
