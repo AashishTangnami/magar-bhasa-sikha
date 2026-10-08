@@ -1,5 +1,9 @@
 # Akkha Magar
 
+[![Deploy to GitHub Pages](https://github.com/AashishTangnami/magar-bhasa-sikha/actions/workflows/pages.yml/badge.svg)](https://github.com/AashishTangnami/magar-bhasa-sikha/actions/workflows/pages.yml)
+
+**Live site:** https://aashishtangnami.github.io/magar-bhasa-sikha/
+
 A Magar language and heritage platform: Akkha Lipi sand tracing, the Dhut / Kham / Kaike dialect matrix, lessons, daily conversations, clans and demography, and a cultural heritage archive.
 
 ![Akkha Magar home screen](docs/home.png)
