@@ -2,6 +2,8 @@
 
 A Magar language and heritage platform: Akkha Lipi sand tracing, the Dhut / Kham / Kaike dialect matrix, lessons, daily conversations, clans and demography, and a cultural heritage archive.
 
+![Akkha Magar home screen](docs/home.png)
+
 ## Requirements
 
 - Node.js 24 (see `.nvmrc`; `nvm use` / `fnm use`)
